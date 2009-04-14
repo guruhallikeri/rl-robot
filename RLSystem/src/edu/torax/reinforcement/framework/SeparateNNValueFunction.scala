@@ -28,10 +28,11 @@ extends ValueFunction {
     res
   }
   
-  def update(state: Environment#State, action: Environment#Action, delta: Double): Unit = {
-    for (nn <- nets) nn.tuneUp(state.encode, delta)
+  def update(state: State, action: Action, delta: Double): Unit = {
+    nets(action.number).tuneUp(state.encode, delta)
   }
-  def apply(state: Environment#State, action: Environment#Action): Double = {
+  
+  def apply(state: State, action: Action): Double = {
     nets(action.number).calculate(state.encode)
   }
 }

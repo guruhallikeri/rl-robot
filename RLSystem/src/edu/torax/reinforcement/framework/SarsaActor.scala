@@ -5,9 +5,8 @@ abstract class SarsaActor (
   val gamma: Double,
   listener: Actor.Event => Unit
 ) extends Actor(valueFunction, listener) {
-  
-  private var state: State = null;
-  private var action: Action = null;
+  private var state: State = null
+  private var action: Action = null
   
   protected def processStep(): Boolean = {
     // returns false if we reached terminal state
@@ -22,7 +21,7 @@ abstract class SarsaActor (
     }
     state = newState
     action = newAction
-    !environment.isTerminal(state)
+    !environment.isTerminated
   }
   
   protected def prepareEpisode(): Unit = {
