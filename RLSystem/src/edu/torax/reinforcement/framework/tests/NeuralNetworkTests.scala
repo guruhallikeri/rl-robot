@@ -29,8 +29,8 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     assert(tmp(2)(0).size == 2+1, "Size is equal " + tmp(2)(0).size)
 
     val input = List(0.0,0.0)
-    assert(net.calculate(input).size == 1)
-    val res = net.calculate(input).head
+    //assert(net.calculate(input).size == 1)
+    val res = net.calculate(input)
     assert(Math.abs(res - 1.0) < 1e-6, "Network output: " + res)
   }
 
@@ -51,8 +51,8 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     assert(net.layersCount == 2)
 
     val input = List(0.5, 0.5)
-    assert(net.calculate(input).size == 1)
-    val res = net.calculate(input).head
+    //assert(net.calculate(input).size == 1)
+    val res = net.calculate(input)
     val need = 3.0*Math.exp(2.0) + 1
     assert(Math.abs(res - need) < 1e-6, "Network output: " + res + " and must be " + need)
   }
@@ -74,7 +74,7 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
 
     val eps = 1e-7
     val needed = 0.5 + 1.5 / (1.0 + exp(-0.95))
-    val got = net.calculate(List(0.6, 0.3)).head
+    val got = net.calculate(List(0.6, 0.3))
     assert(abs(needed - got) < eps, "Needed is: " + needed + ", but got: " + got)
     
     
@@ -112,7 +112,7 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     val df1 = (x:Double) => exp(-x) / pow(1.0 + exp(-x), 2.0)
     val df2 = (x:Double) => 1.0
     
-    val out2 = net.calculate(List(0.6, 0.3)).head
+    val out2 = net.calculate(List(0.6, 0.3))
     assert(abs(out2 - needed)<eps, "Second output should be: " + needed + ", but is: " + out2)
     
     net.tuneUp(List(0.6, 0.3), 0.5)

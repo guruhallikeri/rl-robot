@@ -11,7 +11,7 @@ abstract class Actor (
   protected def processStep(): Boolean	// returns false if we reached terminal state
   protected def prepareEpisode(): Unit
   
-  def chooseAction(state: State, inLearning: Boolean): (Action, Double)
+  def chooseAction(state: Environment#State, inLearning: Boolean): (Environment#Action, Double)
   
   def doStep() {
     if (processStep()) {
