@@ -7,7 +7,7 @@ abstract class NeuralNetwork (
 {
   val inputDimension = dimensions.head
   val outputDimension = dimensions.last
-  //require(outputDimension == 1)
+  require(outputDimension == 1)
   
   val layersCount = dimensions.size - 1
   
@@ -89,7 +89,7 @@ abstract class NeuralNetwork (
     processLayer((1.0 :: input).toArray, 0, actFunctions, derFunctions)
   }
   
-  def calculate(input: List[Double]): List[Double] = {
+  def calculate(input: List[Double]): Double = {
     var in = 1.0 :: input
     var actFuncs = actFunctions 
     
@@ -101,6 +101,7 @@ abstract class NeuralNetwork (
       in = 1.0 :: calcLayer(layer, actFuncs.head).toList
       actFuncs = actFuncs.tail
     }
-    in.tail
+    assert(in.tail.size == 1)
+    in.tail.head
   }
 }
