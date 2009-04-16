@@ -7,14 +7,14 @@ trait Policy[A <: Action, S <: State] {
   
   // return best action according to a policy AND
   // its approximated value
-  def chooseAction(state: S, inLearning: Boolean): (A, Double)
+  protected def chooseAction(state: S, inLearning: Boolean): (A, Double)
 }
 
 trait EpsGreedyPolicy[A <: Action, S <: State] extends Policy[A,S] {
   def eps: Double
   // return best action according to epsilon-greedy policy AND
   // its approximated value
-  def chooseAction(state: S, inLearning: Boolean): (A, Double) = {
+  protected def chooseAction(state: S, inLearning: Boolean): (A, Double) = {
     val rnd = new Random
     if (inLearning && rnd.nextDouble <= eps) {
       val action = environment.prepareAction(rnd.nextInt(environment.actionsCount))
@@ -35,13 +35,13 @@ trait EpsGreedyPolicy[A <: Action, S <: State] extends Policy[A,S] {
 
 trait SoftmaxPolicy[A <: Action, S <: State] extends Policy[A,S] {
   def T: Double
-  def chooseAction(state: S, inLearning: Boolean): (A, Double) = {
+  protected def chooseAction(state: S, inLearning: Boolean): (A, Double) = {
     val actionList = for (i <- 0 until environment.actionsCount; val action = environment.prepareAction(i)) 
       yield (action, valueFunction(state, action))
     val curT = T
     val sum = (0.0 /: actionList) ((x,y) => x + Math.exp(y._2 / curT))
     var curSum = 0.0
-    val rand = (new Random).nextDouble * sum
+    val rand = Math.random * sum//(new Random).nextDouble * sum
     for ((action,value) <- actionList) {
       curSum += Math.exp(value / curT)
       if (curSum >= rand) return (action, value)

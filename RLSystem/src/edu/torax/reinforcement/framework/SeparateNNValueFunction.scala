@@ -18,8 +18,8 @@ extends ValueFunction[A,S] {
     val res = new Array[NeuralNetwork](actionsCount)
     for (i <- 0 until res.size) {
       res(i) = new NeuralNetwork (stateDimension :: hiddenLayersDimensions ::: List(1), 
-                         List.make(hiddenLayersDimensions.length, actFunction) ::: List((x:Double) => x),
-                         List.make(hiddenLayersDimensions.length, derFunction) ::: List((x:Double) => 1.0)
+                         List.make(hiddenLayersDimensions.length, actFunction) ::: List(NeuralNetwork.identityFunction),//List(NeuralNetwork.logisticNegFunction),//List((x:Double) => x),
+                         List.make(hiddenLayersDimensions.length, derFunction) ::: List(NeuralNetwork.identityDerivative)//List(NeuralNetwork.logisticNegDerivative)//List((x:Double) => 1.0)
       ) {	
         val gamma = Gamma
         val lambda = Lambda
@@ -30,11 +30,15 @@ extends ValueFunction[A,S] {
     res
   }
   
-  def update(state: S, action: A, delta: Double): Unit = {
-    nets(action.number).tuneUp(state.encode, delta)
+  def update(state: S, action: A, output: Double): Unit = {
+    nets(action.number).tuneUp(state.encode, output)
+    for (i <- 0 until nets.size; if (i != action.number))
+      nets(i).modifyEligibility()
   }
   
   def apply(state: S, action: A): Double = {
-    nets(action.number).calculate(state.encode)
+    val r = nets(action.number).calculate(state.encode)
+    println("-- " + r)
+    r
   }
 }

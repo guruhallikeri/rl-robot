@@ -42,18 +42,21 @@ abstract class NeuralNetwork (
     }
     result
   } 
-  
+  def modifyEligibility() {
+    for (layer <- eTraces; neuron <- layer; i <- 0 until neuron.size)
+      neuron(i) = lambda*gamma*neuron(i)
+  }
   def tuneUp(input: List[Double], output: Double) {
-    
+    var delta = 0.0
     def processLayer(in: Array[Double],					// layer inputs 
                      k: Int,							// current processing layer number
                      funcs: List[Double => Double],		// activation functions
                      derFuncs: List[Double => Double]	// derivatives of activation functions
     ): Array[Double] = {
-      
       def updateParameters(k: Int, grads: Array[Double]) {
+        //println("k= " + k + "; delta= " + delta)
         for (val i <- 0 until network(k).size; val j <- 0 until network(k)(i).size) {
-          network(k)(i)(j) += alpha*output*eTraces(k)(i)(j)
+          network(k)(i)(j) -= alpha*delta*eTraces(k)(i)(j)
           //println("w: " + k + " " + i + " " + j + " = " + network(k)(i)(j))
           eTraces(k)(i)(j) = gamma*lambda*eTraces(k)(i)(j) + grads(i)*in(j)
           //println("e: " + k + " " + i + " " + j + " = " + eTraces(k)(i)(j))
@@ -62,7 +65,8 @@ abstract class NeuralNetwork (
       
       val ys = for (neuron <- network(k)) yield (0.0 /: (neuron zip in)) ((x,y) => x + y._1 * y._2)
       val grads: Array[Double] = if (k == layersCount-1) {
-        Array((output - funcs.head(ys(0)))*derFuncs.head(ys(0)))
+        delta = (output - funcs.head(ys(0)))
+        Array(delta*derFuncs.head(ys(0)))
       } else {
         val outs = Array(1.0) ++ (ys map funcs.head)
         var nGrads = processLayer(outs, k+1, funcs.tail, derFuncs.tail)
@@ -104,4 +108,16 @@ abstract class NeuralNetwork (
     assert(in.tail.size == 1)
     in.tail.head
   }
+}
+
+object NeuralNetwork {
+  import Math._
+  val identityFunction= (x: Double) => x
+  val identityDerivative = (x:Double) => 1.0
+  val logisticFunction = (x:Double) => 1.0 / (1.0 + exp(-x))
+  val logisticDerivative = (x:Double) => exp(-x) / pow(1.0 + exp(-x), 2.0)
+  val logisticNegFunction = (x:Double) => 2*(logisticFunction(x) - 0.5)
+  val logisticNegDerivative = (x:Double) => { val t = logisticFunction(x); 2.0*t*(1-t) }
+//  val hyperbolicFunction = (x:Double) => 1.7159*tanh(0.6666*x)
+//  val hyperbolicDerivative = (x: Double) => 1.7159*0.6666*(1.0 - pow(tanh(0.6666*x),2.0))
 }
