@@ -11,7 +11,7 @@ abstract class Actor[A <: Action, S <: State] (
   protected def processStep(): Boolean	// returns false if we reached terminal state
   protected def prepareEpisode(): Unit
   
-  def chooseAction(state: S, inLearning: Boolean): (A, Double)
+  protected def chooseAction(state: S, inLearning: Boolean): (A, Double)
   
   def doStep() {
     if (processStep()) {
@@ -32,7 +32,6 @@ abstract class Actor[A <: Action, S <: State] (
 
     listener(Actor.EpisodeStarted(this))
     prepareEpisode()
-    listener(Actor.EpisodeFinished(this))
   }
 }
 
