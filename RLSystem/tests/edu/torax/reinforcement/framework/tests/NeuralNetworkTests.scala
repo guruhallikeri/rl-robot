@@ -118,8 +118,8 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     net.tuneUp(List(0.6, 0.3), 0.5)
     val e10 = delta10*net.lambda*net.gamma + delta10
     val e11 = delta11*net.lambda*net.gamma + delta11
-    val w10 = 0.5 + net.alpha*(0.5-needed)*delta10
-    val w11 = 0.5 + net.alpha*(0.5-needed)*delta11
+    val w10 = 0.5 - net.alpha*(0.5-needed)*delta10
+    val w11 = 0.5 - net.alpha*(0.5-needed)*delta11
     
     assert(abs(net.eTraces(1)(0)(0)-e10)<eps, "Should: " + e10 + ", but is: " + net.eTraces(1)(0)(0))
     assert(abs(net.eTraces(1)(0)(1)-e11)<eps, "Should: " + e11 + ", but is: " + net.eTraces(1)(0)(1))
@@ -135,9 +135,9 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     val e01 = net.lambda*net.gamma*delta01 + delta01
     val e02 = net.lambda*net.gamma*delta02 + delta02
 
-    val w00 = 0.5 + net.alpha*(0.5-needed)*delta00 
-    val w01 = 0.5 + net.alpha*(0.5-needed)*delta01 
-    val w02 = 0.5 + net.alpha*(0.5-needed)*delta02
+    val w00 = 0.5 - net.alpha*(0.5-needed)*delta00 
+    val w01 = 0.5 - net.alpha*(0.5-needed)*delta01 
+    val w02 = 0.5 - net.alpha*(0.5-needed)*delta02
     
     for (i <- 0 until 3) {
       assert(abs(net.eTraces(0)(i)(0)-e00)<eps, "Should: " + e00 + ", but is: " + net.eTraces(0)(i)(0))
@@ -211,8 +211,8 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     net.tuneUp(List(0.6, 0.3), -0.5)
     val e10 = delta10*net.lambda*net.gamma + delta10
     val e11 = delta11*net.lambda*net.gamma + delta11
-    val w10 = 0.5 + net.alpha*(-0.5-e2)*delta10
-    val w11 = 0.5 + net.alpha*(-0.5-e2)*delta11
+    val w10 = 0.5 - net.alpha*(-0.5-e2)*delta10
+    val w11 = 0.5 - net.alpha*(-0.5-e2)*delta11
     
     assert(abs(net.eTraces(1)(0)(0)-e10)<eps, "Should: " + e10 + ", but is: " + net.eTraces(1)(0)(0))
     assert(abs(net.eTraces(1)(0)(1)-e11)<eps, "Should: " + e11 + ", but is: " + net.eTraces(1)(0)(1))
@@ -228,9 +228,9 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
     val e01 = net.lambda*net.gamma*delta01 + delta01
     val e02 = net.lambda*net.gamma*delta02 + delta02
 
-    val w00 = 0.5 + net.alpha*(-0.5-e2)*delta00 
-    val w01 = 0.5 + net.alpha*(-0.5-e2)*delta01 
-    val w02 = 0.5 + net.alpha*(-0.5-e2)*delta02
+    val w00 = 0.5 - net.alpha*(-0.5-e2)*delta00 
+    val w01 = 0.5 - net.alpha*(-0.5-e2)*delta01 
+    val w02 = 0.5 - net.alpha*(-0.5-e2)*delta02
     
     for (i <- 0 until 3) {
       assert(abs(net.eTraces(0)(i)(0)-e00)<eps, "Should: " + e00 + ", but is: " + net.eTraces(0)(i)(0))
@@ -242,7 +242,7 @@ class NeuralNetworkTests extends Suite with PrivateMethodTester {
       assert(abs(net.network(0)(i)(1)-w01)<eps, "Should: " + w01 + ", but is: " + net.network(0)(i)(1))
       assert(abs(net.network(0)(i)(2)-w02)<eps, "Should: " + w02 + ", but is: " + net.network(0)(i)(2))
     }
-    println(e2)
-    println(net.calculate(List(0.6,0.3)))
+    //println(e2)
+    //println(net.calculate(List(0.6,0.3)))
   }
 }

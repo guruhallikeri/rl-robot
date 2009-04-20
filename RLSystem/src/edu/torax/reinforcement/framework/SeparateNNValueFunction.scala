@@ -38,7 +38,11 @@ extends ValueFunction[A,S] {
   
   def apply(state: S, action: A): Double = {
     val r = nets(action.number).calculate(state.encode)
-    println("-- " + r)
+   // println("-- " + r)
     r
+  }
+  
+  def beginEpisode() {
+    for (net <- nets) net.clearEligibility()
   }
 }

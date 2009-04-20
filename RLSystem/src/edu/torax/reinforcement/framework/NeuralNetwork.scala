@@ -42,10 +42,16 @@ abstract class NeuralNetwork (
     }
     result
   } 
+  def clearEligibility() {
+    for (layer <- eTraces; neuron <- layer; i <- 0 until neuron.size)
+      neuron(i) = 0.0
+  }
+  
   def modifyEligibility() {
     for (layer <- eTraces; neuron <- layer; i <- 0 until neuron.size)
       neuron(i) = lambda*gamma*neuron(i)
   }
+  
   def tuneUp(input: List[Double], output: Double) {
     var delta = 0.0
     def processLayer(in: Array[Double],					// layer inputs 

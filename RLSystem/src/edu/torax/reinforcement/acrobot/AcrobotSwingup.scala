@@ -6,7 +6,7 @@ import scala.swing._
 import scala.swing.event._
 import framework._
 
-class AcrobotDrawer(model: AcrobotModel) extends swing.Component {
+class AcrobotDrawer(var model: AcrobotModel) extends swing.Component {
   override def paint(g: Graphics)
   {
     val offx = 5
@@ -37,9 +37,9 @@ class AcrobotDrawer(model: AcrobotModel) extends swing.Component {
 object AcrobotSwingup extends SimpleGUIApplication {
   var env = new AcrobotEnvironment
   val gamma = 0.95
-  val alpha = 0.01
-  val lambda = 0.85
-  val greedyEps = 0.01
+  val alpha = 0.0001
+  val lambda = 0.9
+  val greedyEps = 0.000
   val vfunc = new SeparateNNValueFunction[AcrobotAction, AcrobotState] (
     AcrobotState.dimensionality,
     env.actionsCount,
@@ -47,21 +47,37 @@ object AcrobotSwingup extends SimpleGUIApplication {
     gamma,
     lambda,
     () => (Math.random - 0.5)*2.0*0.2,
-    List(7, 4),
+    //List(5, 8),
+    List(8,3),
+    //List(12, 7), //-- currenty best choice
+    //List(20),
+    //List(20,8),
     NeuralNetwork.logisticNegFunction,
     NeuralNetwork.logisticNegDerivative
   )
+  private var episodesDone = 0
+  private var episodeStartStep = 0
+  private var stepsDone = 0
+  private def updateTitle {
+    top.title = "Acrobot Swingup Demo - [EpisodesDone: " + episodesDone + ", Steps Done: " + stepsDone + "]"
+  }
   private def processMessage(event: Actor.Event): Unit = event match {
     case ev: Actor.EpisodeStarted[_,_] =>
-      println("Episode Started")
+      println("Episode " + episodesDone + " Started")
+      episodeStartStep = stepsDone
       
     case ev: Actor.EpisodeFinished[_,_] =>
-      println("Episode Finished")
+      println("Episode Finished with " + (stepsDone - episodeStartStep + 1) + " steps")
       env = new AcrobotEnvironment
       actor.beginEpisode(env, true)
+      drawer.model = env.model
+      episodeStartStep = stepsDone
+      episodesDone += 1
+      updateTitle
       
     case ev: Actor.StepFinished[_,_] =>
-      println("Step Finished")
+      //println("Step " + stepsDone + " Finished")
+      stepsDone += 1
   }
   val actor = new SarsaActor(vfunc, gamma, processMessage) with EpsGreedyPolicy[AcrobotAction,AcrobotState] {
     val eps = greedyEps
@@ -73,18 +89,21 @@ object AcrobotSwingup extends SimpleGUIApplication {
   val buttonPlus = new Button { text = "Torque +1" }
   val buttonZero = new Button { text = "Torque 0" }
   val buttonMinus = new Button { text = "Torque -1" }
+  val buttonReset = new Button { text = "Reset acrobot!" }
   val button1Step = new Button { text = "1 step" }
   val button10Steps = new Button { text = "10 steps" }
   val button100Steps = new Button { text = "100 steps" }
-  val button1000Steps = new Button { text = "1000 step" }
-  val button10000Steps = new Button { text = "10000 step" }
-  def top = new MainFrame {
+  val button1000Steps = new Button { text = "1000 steps" }
+  val button10000Steps = new Button { text = "10000 steps" }
+  val buttonMillionSteps = new Button { text = "Million steps" }
+  val top = new MainFrame {
     title = "Acrobot Swingup Demo"
     contents = new BoxPanel(Orientation.Vertical) {
       contents += new BoxPanel(Orientation.Horizontal) {
         contents += buttonMinus
         contents += buttonZero
         contents += buttonPlus
+        contents += buttonReset
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
       contents += new BoxPanel(Orientation.Horizontal) {
@@ -93,13 +112,14 @@ object AcrobotSwingup extends SimpleGUIApplication {
         contents += button100Steps 
         contents += button1000Steps 
         contents += button10000Steps 
+        contents += buttonMillionSteps
         border = Swing.EmptyBorder(10, 10, 10, 10)
       }
       contents += drawer
       border = Swing.EmptyBorder(30, 30, 10, 30)
     }
-    listenTo(buttonPlus, buttonMinus, buttonZero)
-    listenTo(button1Step, button10Steps, button100Steps, button1000Steps, button10000Steps)
+    listenTo(buttonPlus, buttonMinus, buttonZero, buttonReset)
+    listenTo(button1Step, button10Steps, button100Steps, button1000Steps, button10000Steps, buttonMillionSteps)
     
     actor.beginEpisode(env, true)
     reactions += {
@@ -108,32 +128,42 @@ object AcrobotSwingup extends SimpleGUIApplication {
         env.model.torque(0.0)
         drawer.repaint
       case ButtonClicked(`buttonPlus`) =>
-        println("click plus")
         env.model.torque(1.0)
         drawer.repaint
       case ButtonClicked(`buttonMinus`) =>
-        println("click minus")
         env.model.torque(-1.0)
         drawer.repaint
+      case ButtonClicked(`buttonReset`) =>
+        env = new AcrobotEnvironment
+        drawer.model = env.model
+        actor.beginEpisode(env,true)
+        drawer.repaint
       case ButtonClicked(`button1Step`) =>
-        println("1 step clicked!")
         actor.doStep()
+        //updateTitle
         drawer.repaint
       case ButtonClicked(`button10Steps`) =>
-        println("10 steps clicked!")
         for (i <- 0 until 10) actor.doStep()
+        updateTitle
         drawer.repaint
       case ButtonClicked(`button100Steps`) =>
-        println("100 steps clicked!")
         for (i <- 0 until 100) actor.doStep()
+        updateTitle
         drawer.repaint
       case ButtonClicked(`button1000Steps`) =>
-        println("1000 steps clicked!")
         for (i <- 0 until 1000) actor.doStep()
+        updateTitle
         drawer.repaint
-    case ButtonClicked(`button10000Steps`) =>
-        println("10000 steps clicked!")
+      case ButtonClicked(`button10000Steps`) =>
         for (i <- 0 until 10000) actor.doStep()
+        updateTitle
+        drawer.repaint
+      case ButtonClicked(`buttonMillionSteps`) =>
+        for (i <- 0 until 1000000) { 
+          actor.doStep()
+         // println("--> " + i)
+        }
+        updateTitle
         drawer.repaint
     }	
   }
