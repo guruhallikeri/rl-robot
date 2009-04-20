@@ -27,6 +27,7 @@ abstract class SarsaActor[A <: Action, S <: State] (
   
   protected def prepareEpisode(): Unit = {
     state = environment.state
+    valueFunction.beginEpisode()
     action = chooseAction(state, learning)._1
   }
 
