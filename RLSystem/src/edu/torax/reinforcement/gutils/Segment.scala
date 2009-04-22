@@ -27,5 +27,26 @@ case class Segment(p1: Vector, p2: Vector) {
         None
       }	
     }	
-  }		
+  }	
+  
+  def distanceTo(p: Vector): Double = {
+    if ((p-p1)*(p2-p1) > -eps && (p-p2)*(p1-p2) > -eps) {
+      Math abs (((p-p1)^(p2-p1)) / (p2-p1).length)
+    } else {
+      min((p-p1).length, (p-p2).length)
+    }
+  }
+  
+  def distanceTo(s: Segment): Double = {
+    var res = Double.PositiveInfinity
+    res = res min (this distanceTo s.p1)
+    res = res min (this distanceTo s.p2)
+    res = res min (s distanceTo p1)
+    res = res min (s distanceTo p2)
+    res
+  }
+}
+
+object Segment {
+  def apply(x1: Double, y1: Double, x2: Double, y2: Double): Segment = Segment(Vector(x1,y1), Vector(x2,y2))
 }

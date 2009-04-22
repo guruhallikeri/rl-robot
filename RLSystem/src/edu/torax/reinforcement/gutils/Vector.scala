@@ -2,8 +2,10 @@ package edu.torax.reinforcement.gutils
 import Math._
 
 case class Vector(x: Double, y: Double) {
-  def rotate(theta: Double): Vector =				// turn theta radians left
-    Vector(x*cos(theta) - y*sin(theta), x*sin(theta) + y*cos(theta))
+  // turn angle degrees counter-clockwise
+  def rotate(angle: Double): Vector = rotateRadians(Math.toRadians(angle))
+  // turn theta radians counter-clockwise
+  def rotateRadians(theta: Double) = Vector(x*cos(theta) - y*sin(theta), x*sin(theta) + y*cos(theta))
   
   def +(v: Vector) = Vector(x + v.x, y + v.y)
   def -(v: Vector) = Vector(x - v.x, y - v.y)		
@@ -17,6 +19,13 @@ case class Vector(x: Double, y: Double) {
   def normalize = {
     val len = length
     Vector(x / len, y / len)
+  }
+  
+  override def toString = "(" + x + "; " + y + ")"
+  
+  override def equals(other: Any) = other match {
+  	case that: Vector => Math.abs(this.x - that.x) < Vector.eps && Math.abs(this.y - that.y) < Vector.eps
+  	case _ => false
   }
 }  
 
