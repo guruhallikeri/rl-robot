@@ -12,14 +12,14 @@ class AcrobotEnvironment extends Environment[AcrobotAction, AcrobotState] {
   def state: AcrobotState = new AcrobotState(model)
   
   private var steps = 0
-  val maxStepsAllowed = 5000
+  val maxStepsAllowed = 20000
   def timedOut = steps > maxStepsAllowed
   
   private val reward = -1.0
   def doAction(action: AcrobotAction): (AcrobotState, Double) = {
     action.doAction(model)
     steps += 1
-    (state, if (terminalState) 0.0 else if (timedOut) 5.0*reward else reward)
+    (state, if (terminalState) 0.0 else if (timedOut) reward else reward)
   }
   
   private def terminalState = {

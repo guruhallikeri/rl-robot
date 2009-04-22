@@ -38,7 +38,7 @@ object AcrobotSwingup extends SimpleGUIApplication {
   var env = new AcrobotEnvironment
   val gamma = 0.95
   val alpha = 0.0001
-  val lambda = 0.9
+  val lambda = 0.0
   val greedyEps = 0.000
   val vfunc = new SeparateNNValueFunction[AcrobotAction, AcrobotState] (
     AcrobotState.dimensionality,
