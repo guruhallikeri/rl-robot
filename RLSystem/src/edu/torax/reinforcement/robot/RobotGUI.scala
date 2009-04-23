@@ -1,6 +1,6 @@
 package edu.torax.reinforcement.robot
 
-//import java.awt.event._
+import java.awt.event._
 import javax.swing._
 import net.miginfocom.swing.MigLayout
 
@@ -40,10 +40,29 @@ class RobotGUI extends JFrame("Robot GUI") {
       obs
     }
     def envModelGenerator(env: RobotEnvironment): RobotModel = {
-      new SimpleRobotModel(20.0, 20.0, 0.0, 1.0, 1.0, 1.0) { }
-      //throw new Exception("Not Implemeted")
+      //println("Robot creation trial")
+      val x = obsGap + Math.random*(env.width - 2*obsGap)
+      val y = obsGap + Math.random*(env.height - 2*obsGap)
+      val dx = Math.random - 0.5
+      val dy = Math.random - 0.5
+      val model = new SimpleRobotModel(x, y, dx, dy, 1.0, 1.0)
+      //println(x + " ---   " + y + " ---   " + dx + " ---   " + dy)
+      if (env.obstacles exists (x => (x distanceTo model.boundBox) < RobotEnvironment.MaxDistanceToGoal)) {
+        envModelGenerator(env)
+      } else {
+        model
+      }
     }
-    def envGoalPosition(env: RobotEnvironment): Vector = Vector(37.0, 37.0) //throw new Exception("Not Implemeted")
+    
+    def envGoalPosition(env: RobotEnvironment): Vector = {
+      val goal = Vector(obsGap + Math.random*(env.width - 2*obsGap), obsGap + Math.random*(env.height - 2*obsGap))
+      val dst = (Double.PositiveInfinity /: env.obstacles) {(d, obs) => d min (obs distanceTo goal) }
+      if (dst < RobotEnvironment.MaxDistanceToGoal) {
+        envGoalPosition(env)
+      } else {
+      	goal
+      }
+    }
     new RobotEnvironment(
       envWidth, envHeight, envTimeOut, envTurnAngle, envMoveDistance, envVisionAngle,
       envObstacleGenerator, envModelGenerator, envGoalPosition
@@ -54,9 +73,9 @@ class RobotGUI extends JFrame("Robot GUI") {
   private def createActor = null //throw new Exception("Not Implemented")
   
   private def processMessage(event: Actor.Event): Unit = event match {
-    case ev: Actor.EpisodeStarted[_,_] =>
-    case ev: Actor.EpisodeFinished[_,_] =>
-    case ev: Actor.StepFinished[_,_] =>
+    case ev: Actor.EpisodeStarted[_,_] => println ("Episode Started")
+    case ev: Actor.EpisodeFinished[_,_] => println ("Episode Finished")
+    case ev: Actor.StepFinished[_,_] => println ("Step Finished")
   }
 
   // ----   Visual components creation ----
@@ -71,10 +90,15 @@ class RobotGUI extends JFrame("Robot GUI") {
   
   private val controlPanel = new JPanel(new MigLayout("wrap 1", "[grow,fill]", "[]"))
   robotPane.add(controlPanel)
-  controlPanel.add(new JButton("OPA1"), "pushx")
-  controlPanel.add(new JButton("OPA2"))
-  controlPanel.add(new JButton("OPA3"))
-  controlPanel.add(new JButton("OPA4"))
+  
+  private val resetButton = new JButton("Reset environment")
+  resetButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    println("Action command: " + event.getActionCommand)
+  	env = createEnvironment
+  	envVisualizer.environment = env
+  	envVisualizer.repaint
+  }})
+  controlPanel.add(resetButton)
   
   setVisible(true);
   robotPane.requestFocusInWindow()

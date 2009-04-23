@@ -34,7 +34,7 @@ case class RobotState(env: RobotEnvironment) extends State {
   
   private def getClosestObstacleDistance(obstacles: Array[RobotObstacle], sect: Sector): Double = {
 	var res = maxDist
-	for (obs <- obstacles) res = Math.min(res, obs.distanceToSector(sect))
+	for (obs <- obstacles) res = Math.min(res, obs distanceTo sect)
 	res
   }
   
