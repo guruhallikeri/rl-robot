@@ -46,21 +46,29 @@ object AcrobotSwingup extends SimpleGUIApplication {
     alpha,
     gamma,
     lambda,
-    () => (Math.random - 0.5)*2.0*0.2,
+    () => (2.0*Math.random - 1.0)*0.2,
     //List(5, 8),
-    List(8,3),
+    //List(8,3),
+    List(7),
     //List(12, 7), //-- currenty best choice
     //List(20),
     //List(20,8),
     NeuralNetwork.logisticNegFunction,
-    NeuralNetwork.logisticNegDerivative
+    NeuralNetwork.logisticNegDerivative,
+    NeuralNetwork.identityFunction,
+    NeuralNetwork.identityDerivative
   )
   private var episodesDone = 0
   private var episodeStartStep = 0
   private var stepsDone = 0
-  private def updateTitle {
-    top.title = "Acrobot Swingup Demo - [EpisodesDone: " + episodesDone + ", Steps Done: " + stepsDone + "]"
+
+  def updateTitle(numer: Int, denom: Int) {
+    if (numer == -1)
+    	top.title = "Acrobot Swingup Problem (c) Andrii Nakryiko - [EpisodesDone: " + episodesDone + ", Steps Done: " + stepsDone + "]"
+    else
+    	top.title = "Acrobot Swingup Problem (c) Andrii Nakryiko | <" + numer + "/" + denom + "> | [EpisodesDone: " + episodesDone + ", Steps Done: " + stepsDone + "]"
   }
+
   private def processMessage(event: Actor.Event): Unit = event match {
     case ev: Actor.EpisodeStarted[_,_] =>
       println("Episode " + episodesDone + " Started")
@@ -73,7 +81,7 @@ object AcrobotSwingup extends SimpleGUIApplication {
       drawer.model = env.model
       episodeStartStep = stepsDone
       episodesDone += 1
-      updateTitle
+      updateTitle(-1,-1)
       
     case ev: Actor.StepFinished[_,_] =>
       //println("Step " + stepsDone + " Finished")
@@ -144,26 +152,63 @@ object AcrobotSwingup extends SimpleGUIApplication {
         drawer.repaint
       case ButtonClicked(`button10Steps`) =>
         for (i <- 0 until 10) actor.doStep()
-        updateTitle
+        updateTitle(-1,-1)
         drawer.repaint
       case ButtonClicked(`button100Steps`) =>
-        for (i <- 0 until 100) actor.doStep()
-        updateTitle
+        (new Thread(new Runnable { 
+        	def run {
+        		for (i <- 0 until 100) {
+        			actor.doStep()
+        			if ((i+1) % 10 == 0) {
+        				updateTitle(i+1, 100)
+        				drawer.repaint
+        			}
+        		}
+        	}
+        })).start()
+        updateTitle(-1,-1)
         drawer.repaint
       case ButtonClicked(`button1000Steps`) =>
-        for (i <- 0 until 1000) actor.doStep()
-        updateTitle
+        (new Thread(new Runnable { 
+        	def run {
+        		for (i <- 0 until 1000) {
+        			actor.doStep()
+        			if ((i+1) % 10 == 0) {
+        				updateTitle(i+1, 1000)
+        				drawer.repaint
+        			}
+        		}
+        	}
+        })).start()
+        updateTitle(-1,-1)
         drawer.repaint
       case ButtonClicked(`button10000Steps`) =>
-        for (i <- 0 until 10000) actor.doStep()
-        updateTitle
+        (new Thread(new Runnable { 
+        	def run {
+        		for (i <- 0 until 10000) {
+        			actor.doStep()
+        			if ((i+1) % 100 == 0) {
+        				updateTitle(i+1, 10000)
+        				drawer.repaint
+        			}
+        		}
+        	}
+        })).start()
+        updateTitle(-1,-1)
         drawer.repaint
       case ButtonClicked(`buttonMillionSteps`) =>
-        for (i <- 0 until 1000000) { 
-          actor.doStep()
-         // println("--> " + i)
-        }
-        updateTitle
+        (new Thread(new Runnable { 
+        	def run {
+        		for (i <- 0 until 1000000) {
+        			actor.doStep()
+        			if ((i+1) % 1000 == 0) {
+        				updateTitle(i+1, 1000000)
+        				drawer.repaint
+        			}
+        		}
+        	}
+        })).start()
+        updateTitle(-1,-1)
         drawer.repaint
     }	
   }

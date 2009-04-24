@@ -38,6 +38,11 @@ case class Segment(p1: Vector, p2: Vector) {
   }
   
   def distanceTo(s: Segment): Double = {
+    (this intersection s) match {
+      case Some(p) => 
+        return 0.0
+      case None =>
+    }
     var res = Double.PositiveInfinity
     res = res min (this distanceTo s.p1)
     res = res min (this distanceTo s.p2)

@@ -5,20 +5,6 @@ import gutils._
 case class RobotState(env: RobotEnvironment) extends State {
   private val maxDist = Vector(env.width, env.height).length
   
-//  def encode: List[Double] = {
-//    val sectorAngle = env.visionAngle / RobotState.visionSectorsNumber
-//    val res = for (i <- 0 until RobotState.visionSectorsNumber)
-//      yield getClosestObstacleDistance(
-//    	env.obstacles,																// obstacles
-//    	Sector(env.model.position + env.model.direction*(env.model.height/2.0),	// beginning of vision sector
-//    		   env.model.direction rotate ((env.visionAngle-sectorAngle)/2.0 - i*sectorAngle), // left ray
-//    		   maxDist, sectorAngle)) / maxDist
-//    val modelToGoalVec = env.goalPosition(env) - env.model.position
-//    val distToGoal = modelToGoalVec.length
-//    val angleToGoal = Math.acos(env.model.direction * modelToGoalVec.normalize)
-//    // add angle to goal and distance to goal
-//    res.toList ::: distToGoal :: angleToGoal :: Nil
-//  }
   private val sectorAngle = env.visionAngle / RobotState.visionSectorsNumber
   val ranges = (for (i <- 0 until RobotState.visionSectorsNumber) yield getClosestObstacleDistance(
     env.obstacles,																			// obstacles
@@ -26,9 +12,9 @@ case class RobotState(env: RobotEnvironment) extends State {
     	   env.model.direction rotate ((env.visionAngle-sectorAngle)/2.0 - i*sectorAngle), 	// left ray
     	   maxDist, sectorAngle)
   	)).toList
-  private val modelToGoalVec = env.goalPosition(env) - env.model.position
+  private val modelToGoalVec = env.goal - env.model.position
   val goalDistance = modelToGoalVec.length
-  val goalAngle = Math.acos(env.model.direction * modelToGoalVec.normalize)
+  val goalAngle = Vector.angleBetween(env.model.direction, modelToGoalVec)//Math.acos(env.model.direction * modelToGoalVec.normalize)
 
   def encode: List[Double] = coarseEncode(ranges, goalDistance, goalAngle)
   
@@ -51,6 +37,8 @@ case class RobotState(env: RobotEnvironment) extends State {
     encoder(Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) :::
     encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)
   }  
+  println(this)
+  override def toString = { "Ranges: " + ranges + ";\n GDist: " + goalDistance + "; GAngle: " + Math.toDegrees(goalAngle) + "(" + goalAngle + ")"}
 }
 
 object RobotState {
@@ -61,6 +49,6 @@ object RobotState {
   val coarseGoalAngleN = 3
   val coarseGoalAngleR = Math.Pi
   
-  val visionSectorsNumber = 3
-  val dimensinality = coarseRangeSensorN*visionSectorsNumber + 2*coarseGoalAngleN + coarseGoalDistanceN 
+  val visionSectorsNumber = 5
+  val dimensionality = coarseRangeSensorN*visionSectorsNumber + 2*coarseGoalAngleN + coarseGoalDistanceN 
 }

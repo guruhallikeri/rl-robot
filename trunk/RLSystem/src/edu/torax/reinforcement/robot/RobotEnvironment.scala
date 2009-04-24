@@ -9,30 +9,29 @@ class RobotEnvironment (
   val timeOut: Int,					// number of moves till time out
   val turnAngle: Double,			// what angle to turn left or right in one action
   val moveDistance: Double,			// what distance to move in one action
-  val visionAngle: Double,			// the central angle of vision sector
-  obstacleGenerator: (RobotEnvironment) => Array[RobotObstacle],	// generates initial configuration of obstacles
-  modelGenerator: (RobotEnvironment) => RobotModel,					// generates model and places it somehow
-  val goalPosition: (RobotEnvironment) => Vector					// gives position of the goal in environment
+  val visionAngle: Double			// the central angle of vision sector
 ) extends Environment[RobotAction, RobotState] {
   private val actions: Array[RobotAction] = Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,RobotTurnLeftAction,RobotTurnRightAction)
   
   def actionsCount: Int = actions.size
   def prepareAction(n: Int): RobotAction = actions(n)
 
-  val obstacles = obstacleGenerator(this)
-  val model = modelGenerator(this)
+  val obstacles = generateObstacles
+  val model = createModel
+  val goal = generateGoal
   
-  def state: RobotState = RobotState(this) 
+  private var curState = RobotState(this)
+  def state = curState
 
   private var stepsDone = 0
   def doAction(action: RobotAction): (RobotState, Double) = {
     action.execute(model, turnAngle, moveDistance)
     stepsDone += 1
-    val curState = state
+    curState = RobotState(this)
     goalReached = if (checkGoalReached(curState)) true else goalReached
     modelCrashed = if (checkModelCrashed(curState)) true else modelCrashed
     terminated = if (checkIsTerminated(curState)) true else terminated
-    (curState, reward(curState))
+    (curState, reward)
   }
   
   private var terminated = false
@@ -43,31 +42,86 @@ class RobotEnvironment (
     timedOut || goalReached || modelCrashed
   }
   
-  private def timedOut: Boolean = stepsDone > timeOut
+  def timedOut: Boolean = stepsDone > timeOut
   
   private var goalReached = false
   def isGoalReached = goalReached
+  
   private def checkGoalReached(curState: RobotState): Boolean = curState.goalDistance < RobotEnvironment.MaxDistanceToGoal
 
   private var modelCrashed = false
   def isModelCrashed = modelCrashed
+  
+  val envBounds = List(Segment(0,0,0,height), Segment(0,height,width,height), 
+                       Segment(width,height,width,0), Segment(0,0,width,0))
+  
   private def checkModelCrashed(curState: RobotState): Boolean = {
-    val minDist = (Double.PositiveInfinity /: curState.ranges) ((x,y) => x min y)
-    minDist < RobotEnvironment.MaxDistanceToGoal
-    throw new Exception("Check for crashing to the bounds")
+    val minObsDist = (Double.PositiveInfinity /: curState.ranges) ((x,y) => x min y)
+    val modelPolygon = model.boundBox
+    val minBoundsDist = (Double.PositiveInfinity /: envBounds) ((x,y) => x min Polygon.distanceBetween(modelPolygon, y))
+    Math.min(minObsDist, minBoundsDist) < RobotEnvironment.MaxDistanceToGoal
   }
   
-  private def reward(curState: RobotState): Double = {
-    if (goalReached)
+  private def reward: Double = {
+    if (goalReached) {
+      println("Goal reached!")
       1.0
-    else if (modelCrashed)
+  	} else if (modelCrashed) {
+      println("Model crashed!")
       0.5*Math.exp(-2.0*curState.goalDistance/width)
-    else if (timedOut)
+    } else if (timedOut) {
+      println("Episode timed out!")
       0.3 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-    else 0.0
+    } else { 
+      0.0
+    }
+  }
+  
+  private def createModel: RobotModel = {
+ 		//println("Robot creation trial")
+ 		val x = 2.0 + Math.random*(width - 4.0)
+ 		val y = 2.0 + Math.random*(height - 4.0)
+ 		val dx = Math.random - 0.5
+ 		val dy = Math.random - 0.5
+ 		val model = new SimpleRobotModel(x, y, dx, dy, 1.0, 1.0)
+ 		//println(x + " ---   " + y + " ---   " + dx + " ---   " + dy)
+ 		if (obstacles exists (x => (x distanceTo model.boundBox) < RobotEnvironment.MaxDistanceToGoal)) {
+ 			createModel
+ 		} else {
+ 			model
+ 		}
+  }
+
+  private def generateObstacles: Array[RobotObstacle] = {
+    import RobotEnvironment._
+    
+    val N = obsMinNumber + (Math.random * (obsMaxNumber - obsMinNumber)).toInt
+    //println("Obstacle count: " + N)
+    var obs = new Array[RobotObstacle](0)
+    for (i <- 0 until N)
+      obs = obs ++ Array(PolygonalRobotObstacle.generate(obs, width, height, obsGap, obsMinRadius, obsMaxRadius))
+    obs
+  }
+  
+  def generateGoal: Vector = {
+    import RobotEnvironment._
+    
+ 		val goal = Vector(obsGap + Math.random*(width - 2*obsGap), obsGap + Math.random*(height - 2*obsGap))
+ 		val dst = Math.min((Double.PositiveInfinity /: obstacles) {(d, obs) => d min (obs distanceTo goal) },
+                      Polygon.distanceBetween(model.boundBox, goal))
+ 		if (dst < RobotEnvironment.MaxDistanceToGoal) {
+ 			generateGoal
+ 		} else {
+ 			goal
+ 		}
   }
 }
 
 object RobotEnvironment {
-  val MaxDistanceToGoal = 1.0	// max distance from model to goal so that we say model is at the goal 
+  val MaxDistanceToGoal = 1.0	// max distance from model to goal so that we say model is at the goal
+  val obsMinNumber = 4
+  val obsMaxNumber = 6
+  val obsMinRadius = 2.5
+  val obsMaxRadius = 5.0
+  val obsGap = 2.0
 }
