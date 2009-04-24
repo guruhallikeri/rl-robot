@@ -10,62 +10,29 @@ trait RobotObstacle {
 
 class PolygonalRobotObstacle extends RobotObstacle
 {
-	private var area = Double.NaN
 	private var points: List[Vector] = Nil 
 	def boundPoints: List[Vector] = points
 
-	def distanceTo(polygon: List[Vector]): Double = {
-	  if (this contains polygon.head) return 0.0
-   
-		var lastPolP = polygon.last
-		var lastObsP = points.last
-		var res = Double.PositiveInfinity
-		for (mp <- polygon) {
-			for (p <- points) {
-				res = res min (Segment(lastPolP, mp) distanceTo Segment(lastObsP, p))
-				lastObsP = p
-			}
-			lastPolP = mp
-		}
-		res
-	}
+	def distanceTo(polygon: List[Vector]): Double = Polygon.distanceBetween(polygon, points)
 
-	def contains(point: Vector): Boolean = {
-		var tmp = 0.0
-		var last = points.last
-		for (p <- points) {
-			tmp += Math.abs((last - point)^(p - point))
-			last = p
-		}
-		//println(2*area + "   -----   " + tmp)
-		Math.abs(2*area - tmp) < Vector.eps
-	}
+	def contains(point: Vector): Boolean = Polygon.containsPoint(points, point)
 
 	def distanceTo(sect: Sector): Double = {
-		val (overlaps, dist) = sect.overlapsWithPolygon(points)
+		val (overlaps, dist) = sect overlapsWithPolygon points
 		if (overlaps) dist else Double.PositiveInfinity
 	}
 
-	def distanceTo(point: Vector): Double = {
-		if (this contains point) return 0.0
-
-		var last = points.last
-		var res = Double.PositiveInfinity
-		for (p <- points) {
-			res = res min (Segment(last, p) distanceTo point)
-			last = p
-		}
-		res
-	}
+	def distanceTo(point: Vector): Double = Polygon.distanceBetween(points, point)
 }
 
 object PolygonalRobotObstacle {
 	def generate(obstacles: Array[RobotObstacle], Xmax: Double, Ymax: Double, gap: Double,
-			Rmin: Double, Rmax: Double/*, maxAttempts: Int*/): /*Option[*/PolygonalRobotObstacle/*]*/ = {
+			Rmin: Double, Rmax: Double): PolygonalRobotObstacle = {
 		//	val center = Vector(gap + Math.random*(Xmax - 2*(Rmax+gap)), gap + Math.random*(Ymax - 2*(Rmax+gap)))
 		val center = Vector(Rmax + Math.random*(Xmax - 2*Rmax), Rmax + Math.random*(Ymax - 2*Rmax))
-		val Rm = (Double.PositiveInfinity /: obstacles) ((x,y) => x min y.distanceTo(center)) min Rmax
+		val Rm = (Double.PositiveInfinity /: obstacles) ((x,y) => (x min y.distanceTo(center)) - 0.5*gap) min Rmax
 		//println("Obstacle generation: " + center + "   Rm: " + Rm)
+		
 		if (Rm < Rmin) {
 			generate(obstacles, Xmax, Ymax, gap, Rmin, Rmax/*, maxAttempts-1*/)
 		} else {
@@ -78,7 +45,6 @@ object PolygonalRobotObstacle {
 				obs.points = (center + Vector(R*Math.cos(theta), R*Math.sin(theta))) :: obs.points 
 				theta += Math.random * 2.0*Math.Pi/3.0
 			}
-			obs.area = Area of obs.points
 			obs
 		}
 	}

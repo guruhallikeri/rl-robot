@@ -5,14 +5,19 @@ import java.awt.Component
 import java.awt.Graphics2D
 import java.awt.Color
 import java.awt.BasicStroke
+import java.awt.RenderingHints
 
 class RobotEnvironmentVisualizer extends Component {
   var environment: RobotEnvironment = null
   
   override def paint(gr: Graphics)
   {
-	val g = gr.asInstanceOf[Graphics2D]
-    val offx = 5
+		val g = gr.asInstanceOf[Graphics2D]
+		val hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+		hints.add(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED))
+		g.setRenderingHints(hints)
+
+		val offx = 5
     val offy = 5
     
     g.setColor(getBackground)
@@ -44,7 +49,7 @@ class RobotEnvironmentVisualizer extends Component {
       }
       // draw goal position
       g.setColor(Color.red)
-      val gPos = environment.goalPosition(environment)
+      val gPos = environment.goal
       val gPosReal = (offx + (xCoef * gPos.x).toInt, offy + (yCoef * gPos.y).toInt)  
       g.drawLine(gPosReal._1 - 5, gPosReal._2 - 5, gPosReal._1 + 5, gPosReal._2 + 5)
       g.drawLine(gPosReal._1 - 5, gPosReal._2 + 5, gPosReal._1 + 5, gPosReal._2 - 5)

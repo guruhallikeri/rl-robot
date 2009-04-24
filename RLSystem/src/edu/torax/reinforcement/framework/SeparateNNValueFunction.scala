@@ -10,7 +10,9 @@ class SeparateNNValueFunction[A <: Action, S <: State] (
   init: () => Double,						// initializer of weights
   hiddenLayersDimensions: List[Int], 		// number of neurons in each HIDDEN layer
   actFunction: Double => Double,			// activation function for hidden layers 
-  derFunction: Double => Double			// derivative of activation function in hidden layer
+  derFunction: Double => Double,			// derivative of activation function in hidden layers
+  actFuncLast: Double => Double,			// activation function for output layer
+  derFuncLast: Double => Double			// derivative of activation function in output layer
 ) 
 extends ValueFunction[A,S] {
   private val nets = initNetworks()
@@ -18,8 +20,8 @@ extends ValueFunction[A,S] {
     val res = new Array[NeuralNetwork](actionsCount)
     for (i <- 0 until res.size) {
       res(i) = new NeuralNetwork (stateDimension :: hiddenLayersDimensions ::: List(1), 
-                         List.make(hiddenLayersDimensions.length, actFunction) ::: List(NeuralNetwork.identityFunction),//List(NeuralNetwork.logisticNegFunction),//List((x:Double) => x),
-                         List.make(hiddenLayersDimensions.length, derFunction) ::: List(NeuralNetwork.identityDerivative)//List(NeuralNetwork.logisticNegDerivative)//List((x:Double) => 1.0)
+                         List.make(hiddenLayersDimensions.length, actFunction) ::: List(actFuncLast),
+                         List.make(hiddenLayersDimensions.length, derFunction) ::: List(derFuncLast)
       ) {	
         val gamma = Gamma
         val lambda = Lambda
@@ -36,12 +38,17 @@ extends ValueFunction[A,S] {
       nets(i).modifyEligibility()
   }
   
+  private var iter = 0
   def apply(state: S, action: A): Double = {
     val r = nets(action.number).calculate(state.encode)
-   // println("-- " + r)
+    
+    iter += 1
+    if (iter % 997 == 0) {
+    	println("-- " + r)
+    }
     r
   }
-  
+
   def beginEpisode() {
     for (net <- nets) net.clearEligibility()
   }

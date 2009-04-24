@@ -27,7 +27,7 @@ class SimpleRobotModel (
   def direction: Vector = dir
   
   def turn(angle: Double): Unit = {		// -180.0 <= angle <= 180.0
-    dir = dir rotate Math.toRadians(angle)
+    dir = dir rotate angle
   }
   
   def move(distance: Double): Unit = {		
