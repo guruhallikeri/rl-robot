@@ -37,26 +37,19 @@ class AcrobotDrawer(var model: AcrobotModel) extends swing.Component {
 object AcrobotSwingup extends SimpleGUIApplication {
   var env = new AcrobotEnvironment
   val gamma = 0.95
-  val alpha = 0.0001
+  val alpha = 0.01
   val lambda = 0.0
   val greedyEps = 0.000
   val vfunc = new SeparateNNValueFunction[AcrobotAction, AcrobotState] (
-    AcrobotState.dimensionality,
     env.actionsCount,
+    AcrobotState.dimensionality,
     alpha,
     gamma,
     lambda,
-    () => (2.0*Math.random - 1.0)*0.2,
-    //List(5, 8),
-    //List(8,3),
-    List(7),
-    //List(12, 7), //-- currenty best choice
-    //List(20),
-    //List(20,8),
-    NeuralNetwork.logisticNegFunction,
-    NeuralNetwork.logisticNegDerivative,
-    NeuralNetwork.identityFunction,
-    NeuralNetwork.identityDerivative
+    () => (2.0*Math.random - 1.0)*0.3,
+    Array(7, 3),
+    NeuralNetwork.logisticNeg,
+    NeuralNetwork.logisticNeg
   )
   private var episodesDone = 0
   private var episodeStartStep = 0
@@ -81,7 +74,7 @@ object AcrobotSwingup extends SimpleGUIApplication {
       drawer.model = env.model
       episodeStartStep = stepsDone
       episodesDone += 1
-      updateTitle(-1,-1)
+      //updateTitle(-1,-1)
       
     case ev: Actor.StepFinished[_,_] =>
       //println("Step " + stepsDone + " Finished")
@@ -89,8 +82,6 @@ object AcrobotSwingup extends SimpleGUIApplication {
   }
   val actor = new SarsaActor(vfunc, gamma, processMessage) with EpsGreedyPolicy[AcrobotAction,AcrobotState] {
     val eps = greedyEps
-    protected var action: AcrobotAction = null
-    protected var state: AcrobotState = null
   }
   
   val drawer = new AcrobotDrawer(env.model)

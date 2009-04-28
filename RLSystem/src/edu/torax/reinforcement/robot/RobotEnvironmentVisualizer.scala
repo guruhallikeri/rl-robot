@@ -6,7 +6,8 @@ import java.awt.Graphics2D
 import java.awt.Color
 import java.awt.BasicStroke
 import java.awt.RenderingHints
-
+import reinforcement.gutils.Vector
+  
 class RobotEnvironmentVisualizer extends Component {
   var environment: RobotEnvironment = null
   
@@ -27,21 +28,25 @@ class RobotEnvironmentVisualizer extends Component {
     val hei = size.height - 2*offy
   
     g.setColor(Color.BLACK)
-    g.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER))
+    g.setStroke(new BasicStroke(1.3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER))
    	g.drawRect(offx, offy, wid, hei)
 
     if (environment != null) {
       val xCoef: Double = (0.0 + wid) / environment.width
       val yCoef: Double = (0.0 + hei) / environment.height
-     
+      val model = environment.model
+      
+      def transX(v: Vector) = offx + (v.x * xCoef).toInt
+      def transY(v: Vector) = offy + (v.y * yCoef).toInt
+      
       // draw obstcales
       g.setColor(Color.GRAY)
 	    
       for (obs <- environment.obstacles) {
     	obs match {
 	      case polyObs: PolygonalRobotObstacle =>
-	        val arrX: Array[Int] = (polyObs.boundPoints map (x => offx + (x.x * xCoef).toInt)).toArray
-	        val arrY: Array[Int] = (polyObs.boundPoints map (x => offy + (x.y * yCoef).toInt)).toArray
+	        val arrX: Array[Int] = (polyObs.boundPoints map (v => transX(v))).toArray
+	        val arrY: Array[Int] = (polyObs.boundPoints map (v => transY(v))).toArray
 	        g.drawPolygon(arrX, arrY, arrX.size)
 	      case _ =>
 	        throw new Exception("Not known type of obstacle")
@@ -50,24 +55,31 @@ class RobotEnvironmentVisualizer extends Component {
       // draw goal position
       g.setColor(Color.red)
       val gPos = environment.goal
-      val gPosReal = (offx + (xCoef * gPos.x).toInt, offy + (yCoef * gPos.y).toInt)  
+      val gPosReal = (transX(gPos), transY(gPos))  
       g.drawLine(gPosReal._1 - 5, gPosReal._2 - 5, gPosReal._1 + 5, gPosReal._2 + 5)
       g.drawLine(gPosReal._1 - 5, gPosReal._2 + 5, gPosReal._1 + 5, gPosReal._2 - 5)
 	    
       // draw model
       g.setColor(Color.blue)
-      val modelX: Array[Int] = (environment.model.boundBox map (x => offx + (x.x * xCoef).toInt)).toArray
-      val modelY: Array[Int] = (environment.model.boundBox map (x => offy + (x.y * yCoef).toInt)).toArray
+      val modelBoundBox = model.boundBox                                                                         
+      val modelX: Array[Int] = (modelBoundBox map (v => transX(v))).toArray
+      val modelY: Array[Int] = (modelBoundBox map (v => transY(v))).toArray
       g.drawPolygon(modelX, modelY, modelX.size)
      
       val pos = environment.model.position
-      val dir = environment.model.direction
+      val dir = pos + Vector(model.direction.x*model.width, model.direction.y*model.height)
       g.setStroke(new BasicStroke(1.0f))
-      g.drawLine(offx + (xCoef * pos.x).toInt, 
-                 offy + (yCoef * pos.y).toInt, 
-                 offx + (xCoef * (pos.x + dir.x*environment.model.width)).toInt, 
-                 offy + (yCoef * (pos.y + dir.y*environment.model.height)).toInt)
+      g.drawLine(transX(pos), transY(pos), transX(dir), transY(dir))  
       
+      g.setColor(Color.white)
+      val sectorAngle = environment.visionAngle / RobotState.visionSectorsNumber
+      for (i <- 0 until RobotState.visionSectorsNumber) {
+        val p1 = model.position //+ model.direction*(model.height/2.0)
+        val p2 = p1 + (model.direction rotate (environment.visionAngle/2.0 - i*sectorAngle))*8
+        val p3 = p1 + (model.direction rotate (environment.visionAngle/2.0 - (i+1)*sectorAngle))*8
+        g.drawLine(transX(p1), transY(p1), transX(p2), transY(p2))
+        g.drawLine(transX(p1), transY(p1), transX(p3), transY(p3))
+      }
     }	
   }
 }

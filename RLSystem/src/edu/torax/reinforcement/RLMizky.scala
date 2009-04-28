@@ -20,8 +20,6 @@ object RLMizky {
   private def createActor = {
     new SarsaActor(valueFunc, gamma, processMessage) with EpsGreedyPolicy[RobotAction,RobotState] {
       val eps = greedyEps
-      protected var action: RobotAction = null
-      protected var state: RobotState = null
     }
   }
   

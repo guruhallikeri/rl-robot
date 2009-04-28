@@ -21,7 +21,7 @@ case class Vector(x: Double, y: Double) {
     Vector(x / len, y / len)
   }
   
-  override def toString = "(" + x + "; " + y + ")"
+  override def toString = "(" + x + ", " + y + ")"
   
   override def equals(other: Any) = other match {
   	case that: Vector => Math.abs(this.x - that.x) < Vector.eps && Math.abs(this.y - that.y) < Vector.eps

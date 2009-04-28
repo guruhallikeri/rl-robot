@@ -23,6 +23,8 @@ class PolygonalRobotObstacle extends RobotObstacle
 	}
 
 	def distanceTo(point: Vector): Double = Polygon.distanceBetween(points, point)
+ 
+	override def toString: String = "Obstacle<" + points.mkString(",") + ">\n"
 }
 
 object PolygonalRobotObstacle {

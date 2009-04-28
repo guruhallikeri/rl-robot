@@ -12,11 +12,15 @@ class RobotEnvironment (
   val visionAngle: Double			// the central angle of vision sector
 ) extends Environment[RobotAction, RobotState] {
   private val actions: Array[RobotAction] = Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,RobotTurnLeftAction,RobotTurnRightAction)
+
+  val envBounds = List(Segment(0,0,0,height), Segment(0,height,width,height), 
+                       Segment(width,height,width,0), Segment(0,0,width,0))
   
+
   def actionsCount: Int = actions.size
   def prepareAction(n: Int): RobotAction = actions(n)
 
-  val obstacles = generateObstacles
+  val obstacles = generateObstacles //new Array[RobotObstacle](0)
   val model = createModel
   val goal = generateGoal
   
@@ -28,52 +32,48 @@ class RobotEnvironment (
     action.execute(model, turnAngle, moveDistance)
     stepsDone += 1
     curState = RobotState(this)
-    goalReached = if (checkGoalReached(curState)) true else goalReached
-    modelCrashed = if (checkModelCrashed(curState)) true else modelCrashed
-    terminated = if (checkIsTerminated(curState)) true else terminated
+    goalReached = if (checkGoalReached) true else goalReached
+    modelCrashed = if (checkModelCrashed) true else modelCrashed
+    terminated = if (checkIsTerminated) true else terminated
     (curState, reward)
   }
   
   private var terminated = false
   def isTerminated: Boolean = terminated
   // if goal reached, time out or crash happened - tells that episode is terminated
-  private def checkIsTerminated(curState: RobotState): Boolean = {
-    val st = state
-    timedOut || goalReached || modelCrashed
-  }
+  private def checkIsTerminated: Boolean = timedOut || goalReached || modelCrashed
   
   def timedOut: Boolean = stepsDone > timeOut
   
   private var goalReached = false
   def isGoalReached = goalReached
   
-  private def checkGoalReached(curState: RobotState): Boolean = curState.goalDistance < RobotEnvironment.MaxDistanceToGoal
+  private def checkGoalReached: Boolean = curState.goalDistance < RobotEnvironment.MaxDistanceToGoal
 
   private var modelCrashed = false
   def isModelCrashed = modelCrashed
   
-  val envBounds = List(Segment(0,0,0,height), Segment(0,height,width,height), 
-                       Segment(width,height,width,0), Segment(0,0,width,0))
-  
-  private def checkModelCrashed(curState: RobotState): Boolean = {
-    val minObsDist = (Double.PositiveInfinity /: curState.ranges) ((x,y) => x min y)
-    val modelPolygon = model.boundBox
-    val minBoundsDist = (Double.PositiveInfinity /: envBounds) ((x,y) => x min Polygon.distanceBetween(modelPolygon, y))
+  private def checkModelCrashed: Boolean = {
+    val modelBoundBox = model.boundBox
+    val minObsDist = (Double.PositiveInfinity /: obstacles) ((x,y) => x min (y distanceTo modelBoundBox))
+    val minBoundsDist = (Double.PositiveInfinity /: envBounds) ((x,y) => x min Polygon.distanceBetween(modelBoundBox, y))
     Math.min(minObsDist, minBoundsDist) < RobotEnvironment.MaxDistanceToGoal
   }
   
   private def reward: Double = {
     if (goalReached) {
-      println("Goal reached!")
+      //println("Goal reached!")
       1.0
   	} else if (modelCrashed) {
-      println("Model crashed!")
-      0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //println("Model crashed!")
+      //0.5*Math.exp(-2.0*curState.goalDistance/width)
+      -1.0
     } else if (timedOut) {
-      println("Episode timed out!")
-      0.3 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //println("Episode timed out!")
+      //0.3 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      -0.5
     } else { 
-      0.0
+      0.0//-0.005
     }
   }
   
@@ -85,7 +85,8 @@ class RobotEnvironment (
  		val dy = Math.random - 0.5
  		val model = new SimpleRobotModel(x, y, dx, dy, 1.0, 1.0)
  		//println(x + " ---   " + y + " ---   " + dx + " ---   " + dy)
- 		if (obstacles exists (x => (x distanceTo model.boundBox) < RobotEnvironment.MaxDistanceToGoal)) {
+ 		val modelBoundBox = model.boundBox
+ 		if (obstacles exists (x => (x distanceTo modelBoundBox) < RobotEnvironment.MaxDistanceToGoal)) {
  			createModel
  		} else {
  			model

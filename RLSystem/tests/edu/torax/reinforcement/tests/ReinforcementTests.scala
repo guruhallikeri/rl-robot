@@ -8,6 +8,8 @@ object ReinforcementTests {
     (new VectorTests).execute()
     (new SectorTests).execute()
     (new SegmentTests).execute()
+    (new UsualNeuralNetworkTests).execute()
+    (new PolygonTests).execute()
     println("All Tests Done!")
   }
 }
