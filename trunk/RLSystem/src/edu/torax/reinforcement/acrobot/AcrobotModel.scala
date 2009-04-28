@@ -43,16 +43,18 @@ class AcrobotModel {
 //    dth1 = dq1new
 //    th2 = q2new
 //    dth2 = dq2new
-    val phi2 = m2 * lc2 * G * cos(th1 + th2 - Pi/2.0)
-    val phi1 = -m2*l1*lc2*dth2*dth2*sin(th2) - 2*m2*l1*lc2*dth1*dth2*sin(th2) + (m1*lc1 + m2*l1)*G*cos(th1-Pi/2.0) + phi2
-    val d2 = m2*(lc2*lc2 + l1*lc2*cos(th2)) + I2
-    val d1 = m1*lc1*lc1 + m2*(l1*l1 + lc2*lc2 + 2*l1*lc2*cos(th2)) + I1 + I2
-    val ddth2 = (maxForce*tau + d2*phi1/d1 - m2*l1*lc2*dth1*dth1*sin(th2) - phi2)/(m2*lc2*lc2 + I2 - d2*d2/d1)
-    val ddth1 = -(d2*ddth2 + phi1)/d1
-    dth1 = bound(dth1 + deltaT*ddth1, minDotTheta1, maxDotTheta1)
-    th1 = bound(th1 + deltaT*dth1, minTheta1, maxTheta1)
-    dth2 = bound(dth2 + deltaT*ddth2, minDotTheta2, maxDotTheta2)
-    th2 = bound(th2 + deltaT*dth2, minTheta2, maxTheta2)
+    for (i <- 1 to 4) {
+	    val phi2 = m2 * lc2 * G * cos(th1 + th2 - Pi/2.0)
+	    val phi1 = -m2*l1*lc2*dth2*dth2*sin(th2) - 2*m2*l1*lc2*dth1*dth2*sin(th2) + (m1*lc1 + m2*l1)*G*cos(th1-Pi/2.0) + phi2
+	    val d2 = m2*(lc2*lc2 + l1*lc2*cos(th2)) + I2
+	    val d1 = m1*lc1*lc1 + m2*(l1*l1 + lc2*lc2 + 2*l1*lc2*cos(th2)) + I1 + I2
+	    val ddth2 = (maxForce*tau + d2*phi1/d1 - m2*l1*lc2*dth1*dth1*sin(th2) - phi2)/(m2*lc2*lc2 + I2 - d2*d2/d1)
+	    val ddth1 = -(d2*ddth2 + phi1)/d1
+	    dth1 = bound(dth1 + i/4.0*deltaT*ddth1, minDotTheta1, maxDotTheta1)
+	    th1 = bound(th1 + i/4.0*deltaT*dth1, minTheta1, maxTheta1)
+	    dth2 = bound(dth2 + i/4.0*deltaT*ddth2, minDotTheta2, maxDotTheta2)
+	    th2 = bound(th2 + i/4.0*deltaT*dth2, minTheta2, maxTheta2)
+    }	
   }
 }
 object AcrobotModel {
@@ -75,6 +77,6 @@ object AcrobotModel {
   val I2 = 1.0
   val G = 9.8
   
-  val deltaT = 0.05
+  val deltaT = 0.2 //0.05
   val maxForce = 1.0
 }

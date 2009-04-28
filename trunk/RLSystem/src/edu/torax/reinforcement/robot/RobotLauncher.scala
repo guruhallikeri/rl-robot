@@ -12,6 +12,7 @@ object RobotLauncher {
     SwingUtilities.invokeLater(new Runnable {
       def run {
     	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    	//val form = new nntest.NNTest
     	val robotForm = new RobotGUI
     	()
       }

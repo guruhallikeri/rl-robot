@@ -24,7 +24,7 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
     val envTurnAngle = 15.0
     val envTimeOut = 200
     val envMoveDistance = 0.9
-    val envVisionAngle = 60.0
+    val envVisionAngle = 90.0
     val modelWidth = 1.0
     val modelHeight = 1.0
 
@@ -33,24 +33,20 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   
   private def createValueFunction = {
     new SeparateNNValueFunction[RobotAction, RobotState] (
-    	RobotState.dimensionality,
     	env.actionsCount,
+    	RobotState.dimensionality,
     	alpha,
     	gamma,
     	lambda,
     	() => (2.0*Math.random - 1.0)*0.1,
-    	List(7),
-    	NeuralNetwork.logisticFunction,
-    	NeuralNetwork.logisticDerivative, 
-    	NeuralNetwork.logisticFunction,
-    	NeuralNetwork.logisticDerivative 
+    	Array(6, 6),
+    	NeuralNetwork.logisticNeg,
+    	NeuralNetwork.logisticNeg
     )
   }
   private def createActor = {
   	new SarsaActor(vfunc, gamma, processMessage) with EpsGreedyPolicy[RobotAction,RobotState] {
   		val eps = greedyEps
-  		protected var action: RobotAction = null
-  		protected var state: RobotState = null
   	}
   }
 
@@ -62,16 +58,24 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   private var timedoutCount = 0
   
   def updateTitle(numer: Int, denom: Int) {
-    if (numer == -1)
-    	setTitle("Robot Control Problem (c) Andrii Nakryiko - [EpisodesDone: " + 
+    val sum = reachedCount + crashedCount + timedoutCount
+    if (numer == -1) {
+    	setTitle("Robot Control Problem - [EpisodesDone: " + 
                 episodesDone + ", Steps Done: " + stepsDone + "]" +
-                " ..:R: " + reachedCount + "; C: " + crashedCount + "; T: " + timedoutCount + "::.."
+                " (R: " + reachedCount + "; C: " + crashedCount + "; T: " + timedoutCount + ") " +
+                "{ " + ((0.0 + reachedCount)/sum*100.0).toInt + "-" + 
+                ((0.0 + crashedCount)/sum*100.0).toInt + "-" +
+                ((0.0 + timedoutCount)/sum*100.0).toInt + "}"
     	)
-    else
-    	setTitle("Robot Control Problem (c) Andrii Nakryiko | <" + numer + "/" + denom + 
-                "> | [EpisodesDone: " + episodesDone + ", Steps Done: " + stepsDone + "]" +
-                " ..:R:" + reachedCount + " C:" + crashedCount + " T: " + timedoutCount + "::.."
+    } else {
+    	setTitle("Robot Control Problem | <" + numer + "/" + denom + 
+                "> | [Ep.Done: " + episodesDone + ", St.Done: " + stepsDone + "]" +
+                " (R:" + reachedCount + " C:" + crashedCount + " T: " + timedoutCount + ") " +
+                "{ " + ((0.0 + reachedCount)/sum*100.0).toInt + "-" + 
+                ((0.0 + crashedCount)/sum*100.0).toInt + "-" +
+                ((0.0 + timedoutCount)/sum*100.0).toInt + "}"
     	)
+    }
   }
 
   private def processMessage(event: Actor.Event): Unit = event match {
@@ -96,6 +100,7 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
       
     case ev: Actor.StepFinished[_,_] =>
       //println("Step " + stepsDone + " Finished")
+  //    println("--------------------------------------")
       stepsDone += 1
   }
 
@@ -113,6 +118,17 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   private val controlPanel = new JPanel(new MigLayout("wrap 1", "[grow,fill]", "[]"))
   robotPane.add(controlPanel)
   
+  private val debugButton = new JButton("Debug information")
+  debugButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    println("Environment obstacles:")
+    println(env.obstacles.toList)
+    println("Model position: " + env.model.position + "; direction: " + env.model.direction)
+    println("Model bound box: " + env.model.boundBox)
+    println("Env state: " + env.state)
+    println("Env goal: " + env.goal)
+  }})
+  controlPanel.add(debugButton)
+
   private val resetButton = new JButton("Reset environment")
   resetButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
   	env = createEnvironment
@@ -204,6 +220,24 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
     envVisualizer.repaint
   }})
   controlPanel.add(do10MillButton)
+
+  private val do50MillButton = new JButton("Do 50 million steps")
+  do50MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    (new Thread(new Runnable { 
+      def run {
+      	for (i <- 0 until 50000000) {
+      	  actor.doStep()
+      	  if ((i+1) % 1000 == 0) {
+      	    updateTitle(i+1, 50000000)
+      	    envVisualizer.repaint
+      	  }
+      	}
+      }
+    })).start()
+    updateTitle(-1,-1)
+    envVisualizer.repaint
+  }})
+  controlPanel.add(do50MillButton)
 
   robotPane.requestFocusInWindow()
   setVisible(true);
