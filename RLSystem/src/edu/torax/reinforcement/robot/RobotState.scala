@@ -9,7 +9,7 @@ case class RobotState(env: RobotEnvironment) extends State {
 	private val sectorAngle = env.visionAngle / RobotState.visionSectorsNumber
 	val ranges = (for (i <- 0 until RobotState.visionSectorsNumber) yield getClosestObstacleDistance(
 			modelBound, env.obstacles,
-			Sector(env.model.position /*+ env.model.direction*(env.model.height/2.0)*/,					// beginning of vision sector
+			Sector(RobotState.sectorStart(i, env.model)/*, env.model.position *//*+ env.model.direction*(env.model.height/2.0)*/,					// beginning of vision sector
 					env.model.direction rotate ((env.visionAngle-sectorAngle)/2.0 - i*sectorAngle), 	
 					maxDist, sectorAngle)
 	)).toList
@@ -20,7 +20,7 @@ case class RobotState(env: RobotEnvironment) extends State {
 	def encode: List[Double] = coarseEncode(ranges, goalDistance, goalAngle)
 
 	private def getClosestObstacleDistance(modelBound: List[Vector], obstacles: Array[RobotObstacle], sect: Sector): Double = {
-	  if (obstacles exists (x => (x distanceTo modelBound) < RobotEnvironment.MaxDistanceToGoal)) 
+	  if (obstacles exists (x => (x distanceTo modelBound) < RobotEnvironment.MaxDistanceToObs)) 
      return 0.0
    
 		var minObsDist = (maxDist /: obstacles) { (x,y) => x min (y distanceTo sect) }
@@ -29,22 +29,27 @@ case class RobotState(env: RobotEnvironment) extends State {
 	}
 
 	import RobotState._
+	def encoder(x: Double, N: Int, r: Double): List[Double] = {
+			val w = 4*N/r
+			val res = for (i <- 1 to N) yield 1.0 / (1.0 + Math.exp(w*((2*i - 1)/2.0*r/N - x)))
+			res.toList
+	}
 	private def coarseEncode(ranges: List[Double], goalDist: Double, goalAngle: Double): List[Double] = {
-		def encoder(x: Double, N: Int, r: Double): List[Double] = {
-				val w = 4*N/r
-				val res = for (i <- 1 to N) yield 1.0 / (1.0 + Math.exp(w*((2*i - 1)/2.0*r/N - x)))
-				res.toList
-		}
 		
-		(ranges flatMap (x => encoder(x, coarseRangeSensorN, coarseRangeSensorR))) /*::: 
+		(ranges flatMap (x => encoder(x, coarseRangeSensorN, coarseRangeSensorR))) ::: 
 		encoder(goalDist, coarseGoalDistanceN, coarseGoalDistanceR) :::
 		encoder(Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) :::
-		encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)*/
-//					(ranges map (_ / maxDist)) ::: List(goalDist/maxDist, goalAngle/2.0/Math.Pi)
+		encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)
+//				(ranges map (x => Math.min(x / coarseRangeSensorR, 1.0))) ::: 
+//        List(Math.min(goalDist/coarseGoalDistanceR, 1.0), goalAngle/2.0/Math.Pi)
 	}  
 	//println(this)
 	//println(encode)
-	override def toString = { "Ranges: " + ranges + ";\n GDist: " + goalDistance + "; GAngle: " + Math.toDegrees(goalAngle) + "(" + goalAngle + ")"}
+	override def toString = { "Ranges: " + ranges + ";\n GDist: " + goalDistance + "; GAngle: " + Math.toDegrees(goalAngle) + "(" + goalAngle + ")" +
+		"\nGoalD: " + encoder(goalDistance, coarseGoalDistanceN, coarseGoalDistanceR) +
+		"\nGoalA1: " + encoder(Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) +
+		"\nGoalA2: " + encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)
+  }
 }
 
 object RobotState {
@@ -56,6 +61,14 @@ object RobotState {
 	val coarseGoalAngleR = Math.Pi
 
 	val visionSectorsNumber = 5
-	val dimensionality = coarseRangeSensorN*visionSectorsNumber /*+ 2*coarseGoalAngleN + coarseGoalDistanceN */
-	//val dimensionality = 7
+	val dimensionality = coarseRangeSensorN*visionSectorsNumber + 2*coarseGoalAngleN + coarseGoalDistanceN
+	//val dimensionality = visionSectorsNumber + 2
+
+	def sectorStart(i: Int, model: RobotModel): Vector = {
+	  val d = model.direction
+	  val pd = d rotate 90
+    
+	  model.position - d*(model.height/2.0) + 
+     	pd*(model.width/2.0 - i/(RobotState.visionSectorsNumber-1.0)*model.width) 
+	}
 }

@@ -1,10 +1,10 @@
 package edu.torax.reinforcement.framework
 import framework._
 
-class SeparateNNValueFunction[A <: Action, S <: State] (
+class UsualNNValueFunction[A <: Action, S <: State] (
   actionsCount: Int,	// how much different actions is there?
   stateDimension: Int,	// dimension of vector representation of state
-  Alpha: Double,							
+  Alpha: () => Double,							
   Gamma: Double,							
   Lambda: Double,							
   init: () => Double,						// initializer of weights
@@ -13,16 +13,17 @@ class SeparateNNValueFunction[A <: Action, S <: State] (
   actFuncLast: (Double => Double, Double => Double)			// activation function for output layer
 ) 
 extends ValueFunction[A,S] {
+  type Network = UsualNeuralNetwork
   private val nets = initNetworks()
-  private def initNetworks(): Array[UsualNeuralNetwork] = {
-    val res = new Array[UsualNeuralNetwork](actionsCount)
+  private def initNetworks(): Array[Network] = {
+    val res = new Array[Network](actionsCount)
     for (i <- 0 until res.size) {
-      res(i) = new UsualNeuralNetwork (stateDimension, hiddenLayersDimensions ++ Array(1), 
+      res(i) = new Network (stateDimension, hiddenLayersDimensions ++ Array(1), 
                          Array.make(hiddenLayersDimensions.length, actFunction) ++ Array(actFuncLast)
       ) {	
         val gamma = Gamma
         val lambda = Lambda
-        val alpha = Alpha
+        def alpha = Alpha()
         def initializer = init()
       }
     }
@@ -31,22 +32,14 @@ extends ValueFunction[A,S] {
   
   def update(state: S, action: A, output: Double): Unit = {
     nets(action.number).tuneUp(state.encode, List(output))
-//    for (i <- 0 until nets.size; if (i != action.number))
-//      nets(i).modifyEligibility()
   }
   
   private var iter = 0
   def apply(state: S, action: A): Double = {
     val r = nets(action.number).calculate(state.encode).head
-    
-//    iter += 1
-//    if (iter % 997 == 0) {
-   // 	println("-- " + r)
-//    }
+//  	println("-- " + r)
     r
   }
 
-  def beginEpisode() {
-//    for (net <- nets) net.clearEligibility()
-  }
+  def beginEpisode() {}
 }

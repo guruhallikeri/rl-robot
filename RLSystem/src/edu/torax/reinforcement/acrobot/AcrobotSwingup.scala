@@ -36,20 +36,27 @@ class AcrobotDrawer(var model: AcrobotModel) extends swing.Component {
 
 object AcrobotSwingup extends SimpleGUIApplication {
   var env = new AcrobotEnvironment
-  val gamma = 0.95
-  val alpha = 0.01
-  val lambda = 0.0
+  val gamma = 0.99
+  val alpha = 0.1
+  val lambda = 0.85
   val greedyEps = 0.000
-  val vfunc = new SeparateNNValueFunction[AcrobotAction, AcrobotState] (
+  val minAlpha = 0.01
+  val maxAlpha = 0.3
+  val iterCnt = 300000
+  var iCnt = 0
+  val vfunc = new UsualNNValueFunction[AcrobotAction, AcrobotState] (
     env.actionsCount,
     AcrobotState.dimensionality,
-    alpha,
+    () => {
+      iCnt += 1
+      Math.max(minAlpha, maxAlpha*(iterCnt-iCnt)/iterCnt)},
+//    () => alpha,
     gamma,
     lambda,
     () => (2.0*Math.random - 1.0)*0.3,
     Array(7, 3),
-    NeuralNetwork.logisticNeg,
-    NeuralNetwork.logisticNeg
+    NeuralNetwork.logistic,
+    NeuralNetwork.identity
   )
   private var episodesDone = 0
   private var episodeStartStep = 0

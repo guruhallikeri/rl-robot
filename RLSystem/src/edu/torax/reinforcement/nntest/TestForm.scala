@@ -14,7 +14,7 @@ import framework._
 
 class TestForm extends JFrame("Neural Network Testing (c) 2009 Andrii Nakryiko") {
   var cnt = 0
-	val nn = new UsualNeuralNetwork(1, Array(7, 13, 1),
+	val nn = new UsualNeuralNetwork(1, Array(6, 6, 1),
 			Array(NeuralNetwork.logisticNeg, NeuralNetwork.logisticNeg, NeuralNetwork.identity)
 			//Array(NeuralNetwork.logistic, NeuralNetwork.logistic)
 			//Array(((x: Double) => Math.cos(6.0*Math.Pi*x), (x: Double) => -6.0*Math.Pi*Math.sin(6.0*Math.Pi*x)))
@@ -24,6 +24,7 @@ class TestForm extends JFrame("Neural Network Testing (c) 2009 Andrii Nakryiko")
 		  cnt += 1
 		  //println(cnt + " -- " + r)
 		  r
+		  0.5
 		}
 		//  val initializer = 1.0
 		def initializer() = {

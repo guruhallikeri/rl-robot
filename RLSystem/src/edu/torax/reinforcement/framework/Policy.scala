@@ -44,9 +44,11 @@ trait SoftmaxPolicy[A <: Action, S <: State] extends Policy[A,S] {
     val rand = Math.random * sum//(new Random).nextDouble * sum
     for ((action,value) <- actionList) {
       curSum += Math.exp(value / curT)
-      if (curSum >= rand) return (action, value)
+      if (curSum >= rand - 1e-6) return (action, value)
     }
-    throw new Exception("Softmax policy failed to produce (action, value) pair")
+    println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    actionList.last
+    //throw new Exception("Softmax policy failed to produce (action, value) pair")
   }
   
 }

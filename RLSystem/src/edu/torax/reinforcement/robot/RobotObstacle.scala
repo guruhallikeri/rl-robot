@@ -28,15 +28,16 @@ class PolygonalRobotObstacle extends RobotObstacle
 }
 
 object PolygonalRobotObstacle {
-	def generate(obstacles: Array[RobotObstacle], Xmax: Double, Ymax: Double, gap: Double,
-			Rmin: Double, Rmax: Double): PolygonalRobotObstacle = {
-		//	val center = Vector(gap + Math.random*(Xmax - 2*(Rmax+gap)), gap + Math.random*(Ymax - 2*(Rmax+gap)))
-		val center = Vector(Rmax + Math.random*(Xmax - 2*Rmax), Rmax + Math.random*(Ymax - 2*Rmax))
+  val maxTries = 10
+	def generate(obstacles: List[RobotObstacle], Xmax: Double, Ymax: Double, gap: Double,
+						Rmin: Double, Rmax: Double, trial: Int): PolygonalRobotObstacle = {
+		if (trial > maxTries) return null
+	  
+	  val center = Vector(Rmax + Math.random*(Xmax - 2*Rmax), Rmax + Math.random*(Ymax - 2*Rmax))
 		val Rm = (Double.PositiveInfinity /: obstacles) ((x,y) => (x min y.distanceTo(center)) - 0.5*gap) min Rmax
-		//println("Obstacle generation: " + center + "   Rm: " + Rm)
 		
 		if (Rm < Rmin) {
-			generate(obstacles, Xmax, Ymax, gap, Rmin, Rmax/*, maxAttempts-1*/)
+			generate(obstacles, Xmax, Ymax, gap, Rmin, Rmax, trial+1)
 		} else {
 			val R = Rmin + Math.random*(Rm - Rmin)
 			val obs = new PolygonalRobotObstacle

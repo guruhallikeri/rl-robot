@@ -5,30 +5,23 @@ abstract class SarsaActor[A <: Action, S <: State] (
   val gamma: Double,
   listener: Actor.Event => Unit
 ) extends Actor[A,S](valueFunction, listener) {
-  protected var state: S = _
-  protected var action: A = _
   
   protected def processStep(): Boolean = {
     // returns false if we reached terminal state
-    assert(state != null)
-    assert(action != null)
-    
+    val state = environment.state
+    val (action, actVal) = chooseAction(state, learning)
     val (newState, reward) = environment.doAction(action)
-    val (newAction, newActionValue) = chooseAction(newState, learning)
+    val (newAction, newActionValue) = chooseAction(newState, false)
     if (learning) {
       val wanted = reward + gamma * newActionValue
       //println(wanted + " -=-=-=-=-=-=- ")
       valueFunction.update(state, action, wanted)
     }
-    state = newState
-    action = newAction
     !environment.isTerminated
   }
   
   protected def prepareEpisode(): Unit = {
-    state = environment.state
     valueFunction.beginEpisode()
-    action = chooseAction(state, learning)._1
   }
 
 }
