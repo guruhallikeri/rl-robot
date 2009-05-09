@@ -11,7 +11,9 @@ class RobotEnvironment (
   val moveDistance: Double,			// what distance to move in one action
   val visionAngle: Double			// the central angle of vision sector
 ) extends Environment[RobotAction, RobotState] {
-  private val actions: Array[RobotAction] = Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,RobotTurnLeftAction,RobotTurnRightAction)
+  private val actions: Array[RobotAction] = 
+    Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,
+          RobotTurnLeftAction,RobotTurnRightAction)
 
   val envBounds = List(Segment(0,0,0,height), Segment(0,height,width,height), 
                        Segment(width,height,width,0), Segment(0,0,width,0))
@@ -57,7 +59,7 @@ class RobotEnvironment (
     val modelBoundBox = model.boundBox
     val minObsDist = (Double.PositiveInfinity /: obstacles) ((x,y) => x min (y distanceTo modelBoundBox))
     val minBoundsDist = (Double.PositiveInfinity /: envBounds) ((x,y) => x min Polygon.distanceBetween(modelBoundBox, y))
-    Math.min(minObsDist, minBoundsDist) < RobotEnvironment.MaxDistanceToGoal
+    Math.min(minObsDist, minBoundsDist) < RobotEnvironment.MaxDistanceToObs
   }
   
   private def reward: Double = {
@@ -66,14 +68,20 @@ class RobotEnvironment (
       1.0
   	} else if (modelCrashed) {
       //println("Model crashed!")
-      //0.5*Math.exp(-2.0*curState.goalDistance/width)
-      -1.0
+      -1.0 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //-1.0/java.lang.Math.log(2+stepsDone)
+      //-1.0 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //0.0
     } else if (timedOut) {
       //println("Episode timed out!")
-      //0.3 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-      -0.5
+      -0.7 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //-0.8 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
+      //-0.5
+      //-1.0/java.lang.Math.log(2+stepsDone)
+      //0.0
     } else { 
-      0.0//-0.005
+      -0.01//-0.005
+      //0.0
     }
   }
   
@@ -86,7 +94,7 @@ class RobotEnvironment (
  		val model = new SimpleRobotModel(x, y, dx, dy, 1.0, 1.0)
  		//println(x + " ---   " + y + " ---   " + dx + " ---   " + dy)
  		val modelBoundBox = model.boundBox
- 		if (obstacles exists (x => (x distanceTo modelBoundBox) < RobotEnvironment.MaxDistanceToGoal)) {
+ 		if (obstacles exists (x => (x distanceTo modelBoundBox) < RobotEnvironment.MaxDistanceToObs)) {
  			createModel
  		} else {
  			model
@@ -98,10 +106,14 @@ class RobotEnvironment (
     
     val N = obsMinNumber + (Math.random * (obsMaxNumber - obsMinNumber)).toInt
     //println("Obstacle count: " + N)
-    var obs = new Array[RobotObstacle](0)
-    for (i <- 0 until N)
-      obs = obs ++ Array(PolygonalRobotObstacle.generate(obs, width, height, obsGap, obsMinRadius, obsMaxRadius))
-    obs
+    var obs: List[RobotObstacle] = Nil
+    for (i <- 0 until N) {
+      val obstacle = PolygonalRobotObstacle.generate(obs, width, height, obsGap, obsMinRadius, obsMaxRadius, 0)
+      if (obstacle != null) {
+        obs = obstacle :: obs
+      }
+    }
+    obs.toArray
   }
   
   def generateGoal: Vector = {
@@ -110,7 +122,7 @@ class RobotEnvironment (
  		val goal = Vector(obsGap + Math.random*(width - 2*obsGap), obsGap + Math.random*(height - 2*obsGap))
  		val dst = Math.min((Double.PositiveInfinity /: obstacles) {(d, obs) => d min (obs distanceTo goal) },
                       Polygon.distanceBetween(model.boundBox, goal))
- 		if (dst < RobotEnvironment.MaxDistanceToGoal) {
+ 		if (dst < RobotEnvironment.MaxDistanceToObs) {
  			generateGoal
  		} else {
  			goal
@@ -120,9 +132,10 @@ class RobotEnvironment (
 
 object RobotEnvironment {
   val MaxDistanceToGoal = 1.0	// max distance from model to goal so that we say model is at the goal
+  val MaxDistanceToObs = 0.01
   val obsMinNumber = 4
-  val obsMaxNumber = 6
-  val obsMinRadius = 2.5
-  val obsMaxRadius = 5.0
-  val obsGap = 2.0
+  val obsMaxNumber = 10
+  val obsMinRadius = 1.5
+  val obsMaxRadius = 4.0
+  val obsGap = 1.3
 }
