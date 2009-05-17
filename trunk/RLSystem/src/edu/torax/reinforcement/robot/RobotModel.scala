@@ -11,6 +11,7 @@ trait RobotModel {
   def height: Double						// height of robot (parallel to the heading vector)
   def distanceTo(p: Vector): Double	// distance from model to the specified point
   def boundBox: List[Vector]				// bounding box of the model
+  def makeClone: RobotModel
 }
 
 class SimpleRobotModel (
@@ -21,6 +22,14 @@ class SimpleRobotModel (
   val width: Double,
   val height: Double 
 ) extends RobotModel {
+  
+  def makeClone: RobotModel = {
+    val r = new SimpleRobotModel(startX, startY, startDx, startDy, width, height)
+    r.pos = this.pos
+    r.dir = this.dir
+    r
+  }
+  
   private var pos: Vector = (startX, startY)				// current position
   private var dir: Vector = (startDx, startDy).normalize	// current moving direction
   def position: Vector = pos

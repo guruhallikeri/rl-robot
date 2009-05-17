@@ -27,6 +27,8 @@ case class Vector(x: Double, y: Double) {
   	case that: Vector => Math.abs(this.x - that.x) < Vector.eps && Math.abs(this.y - that.y) < Vector.eps
   	case _ => false
   }
+  
+  override def clone = Vector(x,y)
 }  
 
 object Vector {

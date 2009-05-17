@@ -62,7 +62,6 @@ object RobotState {
 
 	val visionSectorsNumber = 5
 	val dimensionality = coarseRangeSensorN*visionSectorsNumber + 2*coarseGoalAngleN + coarseGoalDistanceN
-	//val dimensionality = visionSectorsNumber + 2
 
 	def sectorStart(i: Int, model: RobotModel): Vector = {
 	  val d = model.direction
@@ -70,5 +69,6 @@ object RobotState {
     
 	  model.position - d*(model.height/2.0) + 
      	pd*(model.width/2.0 - i/(RobotState.visionSectorsNumber-1.0)*model.width) 
+		//model.position
 	}
 }

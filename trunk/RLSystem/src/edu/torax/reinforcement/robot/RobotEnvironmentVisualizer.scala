@@ -9,7 +9,22 @@ import java.awt.RenderingHints
 import reinforcement.gutils.Vector
   
 class RobotEnvironmentVisualizer extends Component {
-  var environment: RobotEnvironment = null
+  private var env: RobotEnvironment = null
+  def environment = env
+  def environment_=(env: RobotEnvironment) {
+    this.env = env
+    scrMoves = 1
+    scrPositions(0) = env.model.position
+  }
+  
+  var inScreenshotMode = false
+  private val scrPositions = new Array[Vector](2000)
+  private var scrMoves = 0
+  
+  def addPosition(pos: Vector) {
+	  scrPositions(scrMoves) = pos
+	  scrMoves += 1
+  }
   
   override def paint(gr: Graphics)
   {
@@ -59,32 +74,58 @@ class RobotEnvironmentVisualizer extends Component {
       g.drawLine(gPosReal._1 - 5, gPosReal._2 - 5, gPosReal._1 + 5, gPosReal._2 + 5)
       g.drawLine(gPosReal._1 - 5, gPosReal._2 + 5, gPosReal._1 + 5, gPosReal._2 - 5)
 	    
-      //draw vision sectors
-      val sectorAngle = environment.visionAngle / RobotState.visionSectorsNumber
-      g.setColor(Color.white)
-      g.setStroke(new BasicStroke(0.5f))
-      for (i <- 0 until RobotState.visionSectorsNumber) {
-        val p1 = RobotState.sectorStart(i, model)//model.position //+ model.direction*(model.height/2.0)
-        val p2 = p1 + (model.direction rotate (environment.visionAngle/2.0 - i*sectorAngle))*8
-        val p3 = p1 + (model.direction rotate (environment.visionAngle/2.0 - (i+1)*sectorAngle))*8
-        g.drawLine(transX(p1), transY(p1), transX(p2), transY(p2))
-        g.drawLine(transX(p1), transY(p1), transX(p3), transY(p3))
+      if (!inScreenshotMode) {
+	      //draw vision sectors
+	      val sectorAngle = environment.visionAngle / RobotState.visionSectorsNumber
+	      g.setColor(Color.white)
+	      g.setStroke(new BasicStroke(0.5f))
+	      for (i <- 0 until RobotState.visionSectorsNumber) {
+	        val p1 = RobotState.sectorStart(i, model)//model.position //+ model.direction*(model.height/2.0)
+	        val p2 = p1 + (model.direction rotate (environment.visionAngle/2.0 - i*sectorAngle))*8
+	        val p3 = p1 + (model.direction rotate (environment.visionAngle/2.0 - (i+1)*sectorAngle))*8
+	        g.drawLine(transX(p1), transY(p1), transX(p2), transY(p2))
+	        g.drawLine(transX(p1), transY(p1), transX(p3), transY(p3))
+	      }
+	
+	      // draw model
+	      val modelBoundBox = model.boundBox                                                                         
+	      val modelX: Array[Int] = (modelBoundBox map (v => transX(v))).toArray
+	      val modelY: Array[Int] = (modelBoundBox map (v => transY(v))).toArray
+	      g.setColor(Color.blue)
+	      g.setStroke(new BasicStroke(1.2f))
+	      g.drawPolygon(modelX, modelY, modelX.size)
+	
+	      // draw direction
+	      val pos = model.position
+	      val dir = pos + Vector(model.direction.x*model.width, model.direction.y*model.height)
+	      g.setStroke(new BasicStroke(1.5f))
+	      g.drawLine(transX(pos), transY(pos), transX(dir), transY(dir))  
+      } else {
+      	g.setColor(Color.blue)
+      	g.setStroke(new BasicStroke(1.2f))
+      	val pos = scrPositions(0)
+      	val off = 3
+      	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
+      	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
+      	g.drawOval(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
+        
+        for (i <- 1 until scrMoves-1) {
+        	g.setColor(Color.blue)
+        	g.setStroke(new BasicStroke(1.2f))
+        	val pos = scrPositions(i)
+        	val off = 3
+        	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
+        	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
+        }
+        
+        if (scrMoves > 1) {
+	      	val pos = scrPositions(scrMoves-1)
+	      	val off = 3
+	      	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
+	      	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
+	      	g.drawRect(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
+        }
       }
-
-      // draw model
-      val modelBoundBox = model.boundBox                                                                         
-      val modelX: Array[Int] = (modelBoundBox map (v => transX(v))).toArray
-      val modelY: Array[Int] = (modelBoundBox map (v => transY(v))).toArray
-      g.setColor(Color.blue)
-      g.setStroke(new BasicStroke(1.2f))
-      g.drawPolygon(modelX, modelY, modelX.size)
-
-      // draw direction
-      val pos = model.position
-      val dir = pos + Vector(model.direction.x*model.width, model.direction.y*model.height)
-      g.setStroke(new BasicStroke(1.5f))
-      g.drawLine(transX(pos), transY(pos), transX(dir), transY(dir))  
-      
     }	
   }
 }

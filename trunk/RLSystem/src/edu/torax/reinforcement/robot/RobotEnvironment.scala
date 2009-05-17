@@ -22,9 +22,9 @@ class RobotEnvironment (
   def actionsCount: Int = actions.size
   def prepareAction(n: Int): RobotAction = actions(n)
 
-  val obstacles = generateObstacles //new Array[RobotObstacle](0)
-  val model = createModel
-  val goal = generateGoal
+  var obstacles = generateObstacles //new Array[RobotObstacle](0)
+  var model = createModel
+  var goal = generateGoal
   
   private var curState = RobotState(this)
   def state = curState
@@ -69,19 +69,12 @@ class RobotEnvironment (
   	} else if (modelCrashed) {
       //println("Model crashed!")
       -1.0 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-      //-1.0/java.lang.Math.log(2+stepsDone)
-      //-1.0 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-      //0.0
     } else if (timedOut) {
       //println("Episode timed out!")
       -0.7 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-      //-0.8 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
-      //-0.5
-      //-1.0/java.lang.Math.log(2+stepsDone)
-      //0.0
     } else { 
-      -0.01//-0.005
-      //0.0
+      //-0.05
+      -0.01
     }
   }
   
@@ -127,6 +120,18 @@ class RobotEnvironment (
  		} else {
  			goal
  		}
+  }
+  
+  def makeClone = {
+    val env = new RobotEnvironment(width, height, timeOut, turnAngle, moveDistance, visionAngle)
+    env.obstacles = this.obstacles map (x => x.makeClone)
+    env.model = this.model.makeClone 
+    env.goal = this.goal.clone
+    env.goalReached = this.goalReached
+    env.stepsDone = this.stepsDone
+    env.modelCrashed = this.modelCrashed
+    env.curState = RobotState(env)
+    env
   }
 }
 
