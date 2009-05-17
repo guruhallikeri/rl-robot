@@ -46,8 +46,8 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
       val I = curLayer(0).size
       for (j <- 0 until dimensions(layer)) {
         for (i <- 0 until I) {
-          curLayer(j)(i) -= delta*curTraces(j)(i)
-          curTraces(j)(i) = gam*lam*curTraces(j)(i) + eta*grads(j)*in(i)  
+          curTraces(j)(i) = gam*lam*curTraces(j)(i) - grads(j)*in(i)  
+          curLayer(j)(i) += eta*delta*curTraces(j)(i)
          // println(" +++ " + eta*grads(j)*in(i) + " ! " + eta + " ! " + grads(j) + " ! " + in(i))
         }
       }

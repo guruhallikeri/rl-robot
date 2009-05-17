@@ -7,10 +7,10 @@ import net.miginfocom.swing.MigLayout
 import framework._
 import gutils._
 
-class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
+class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
   val gamma = 0.99
 //  val alpha = 0.1
-//  val lambda = 0.8
+  val lambda = 0.95
 //  val greedyEps = 0.1
   
   var env = createEnvironment
@@ -21,7 +21,7 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   private def createEnvironment: RobotEnvironment = {
     val envWidth = 40.0
     val envHeight = 40.0
-    val envTurnAngle = 10.0
+    val envTurnAngle = 15.0
     val envTimeOut = 200
     val envMoveDistance = 0.9
     val envVisionAngle = 75.0
@@ -34,19 +34,19 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   private def createValueFunction = {
  		val minAlpha = 0.01
  		val maxAlpha = 0.3
- 		val iterCnt = 500000
+ 		val iterCnt = 1000000
  		var iCnt = 0
     new UsualNNValueFunction[RobotAction, RobotState] (
     	env.actionsCount,
     	RobotState.dimensionality,
       () => {
         iCnt += 1
-        val r = Math.max(minAlpha, maxAlpha*(iterCnt-iCnt)/iterCnt)
+        val r = Math.max(minAlpha, minAlpha+(maxAlpha-minAlpha)*(iterCnt-iCnt)/iterCnt)
         //println("--- " +r)
         r
       },
     	gamma,
-    	Double.NaN,
+    	lambda,
     	() => 0.0,
     	Array(13,8),
     	NeuralNetwork.logistic,
@@ -57,12 +57,12 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   	new SarsaActor(vfunc, gamma, processMessage) with EpsGreedyPolicy[RobotAction,RobotState] {
   	  private val minEps = 0.01
   	  private val maxEps = 0.2
-  	  private val iterCnt = 500000
+  	  private val iterCnt = 1000000
   	  private var iterDone = 0
   	  //val eps = greedyEps
   		def eps = {
   		  iterDone += 1
-        minEps max (iterCnt - iterDone + 0.0)/iterCnt*maxEps
+        minEps max minEps+(iterCnt - iterDone + 0.0)/iterCnt*(maxEps-minEps)
   		}
   	}
 //  	new SarsaActor(vfunc, gamma, processMessage) with SoftmaxPolicy[RobotAction,RobotState] {
@@ -122,7 +122,7 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
       episodeStartStep = stepsDone
       
     case ev: Actor.EpisodeFinished[_,_] =>
-      println("Episode Finished with " + (stepsDone - episodeStartStep + 1) + " steps")
+      println("Episode Finished with " + (stepsDone - episodeStartStep) + " steps")
 
       if (lastCnt == lastMax) {
         lasts(lastB) match {
@@ -152,12 +152,10 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
       
       episodeStartStep = stepsDone
       episodesDone += 1
-      //updateTitle(-1, -1)
       
     case ev: Actor.StepFinished[_,_] =>
-      //println("Step " + stepsDone + " Finished")
-  //    println("--------------------------------------")
       stepsDone += 1
+      envVisualizer.addPosition(env.model.position)
   }
 
   // ----   Visual components creation ----
@@ -182,6 +180,8 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
     println("Model bound box: " + env.model.boundBox)
     println("Env state: " + env.state)
     println("Env goal: " + env.goal)
+    
+    //setSize(3200,3000)
   }})
   controlPanel.add(debugButton)
 
@@ -277,6 +277,24 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
   }})
   controlPanel.add(doMillButton)
 
+  private val do2MillButton = new JButton("Do 2 million steps")
+  do2MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    (new Thread(new Runnable { 
+      def run {
+      	for (i <- 0 until 2000000) {
+      	  actor.doStep()
+      	  if ((i+1) % 1000 == 0) {
+      	    updateTitle(i+1, 2000000)
+      	    envVisualizer.repaint
+      	  }
+      	}
+      }
+    })).start()
+    updateTitle(-1,-1)
+    envVisualizer.repaint
+  }})
+  controlPanel.add(do2MillButton)
+
   private val do3MillButton = new JButton("Do 3 million steps")
   do3MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
     (new Thread(new Runnable { 
@@ -312,6 +330,36 @@ class RobotGUI extends JFrame("Robot Control Problem (c) Andrii Nakryiko") {
     envVisualizer.repaint
   }})
   controlPanel.add(do5MillButton)
+
+  private val screenStartButton = new JButton("Start Screenshot Mode")
+  screenStartButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    envVisualizer.inScreenshotMode = true
+    envVisualizer.repaint
+  }})
+  controlPanel.add(screenStartButton)
+
+  private val screenEndButton = new JButton("End Screenshot Mode")
+  screenEndButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    envVisualizer.inScreenshotMode = false
+    envVisualizer.repaint
+  }})
+  controlPanel.add(screenEndButton)
+
+  private var savedEnv: RobotEnvironment = null
+  private val saveEnvButton = new JButton("Save Environment")
+  saveEnvButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    savedEnv = env.makeClone
+  }})
+  controlPanel.add(saveEnvButton)
+
+  private val loadEnvButton = new JButton("Load Environment")
+  loadEnvButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+    env = savedEnv.makeClone
+    envVisualizer.environment = env
+    actor.beginEpisode(env,true)
+    envVisualizer.repaint
+  }})
+  controlPanel.add(loadEnvButton)
 
   robotPane.requestFocusInWindow()
   setVisible(true);

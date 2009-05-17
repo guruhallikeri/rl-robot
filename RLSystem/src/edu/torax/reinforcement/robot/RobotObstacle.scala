@@ -6,6 +6,7 @@ trait RobotObstacle {
 	def distanceTo(sector: Sector): Double					// return Double.PositiveInfinity if does not overlap with Sector
 	def distanceTo(point: Vector): Double
 	def contains(point: Vector): Boolean						// tells wheter specified point lies inside the obstacle
+  def makeClone: RobotObstacle
 }
 
 class PolygonalRobotObstacle extends RobotObstacle
@@ -25,6 +26,12 @@ class PolygonalRobotObstacle extends RobotObstacle
 	def distanceTo(point: Vector): Double = Polygon.distanceBetween(points, point)
  
 	override def toString: String = "Obstacle<" + points.mkString(",") + ">\n"
+ 
+	def makeClone = {
+	  val r = new PolygonalRobotObstacle
+	  r.points = this.points map (x => x.clone)
+    r
+	}
 }
 
 object PolygonalRobotObstacle {
