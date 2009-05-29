@@ -14,6 +14,7 @@ abstract class SarsaActor[A <: Action, S <: State] (
     val (newAction, newActionValue) = chooseAction(newState, false)
     if (learning) {
       val wanted = reward + gamma * newActionValue
+//      val wanted = actVal*0.7 + 0.3*(reward + gamma * newActionValue)
       //println(wanted + " -=-=-=-=-=-=- ")
       valueFunction.update(state, action, wanted)
     }

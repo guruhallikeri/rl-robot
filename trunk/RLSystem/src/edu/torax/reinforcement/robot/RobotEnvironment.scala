@@ -73,7 +73,6 @@ class RobotEnvironment (
       //println("Episode timed out!")
       -0.7 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
     } else { 
-      //-0.05
       -0.01
     }
   }

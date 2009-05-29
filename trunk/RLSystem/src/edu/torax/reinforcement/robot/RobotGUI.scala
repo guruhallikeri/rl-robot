@@ -7,11 +7,13 @@ import net.miginfocom.swing.MigLayout
 import framework._
 import gutils._
 
+abstract class RobotSessionSettings {
+  
+}  
+
 class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
   val gamma = 0.99
-//  val alpha = 0.1
   val lambda = 0.95
-//  val greedyEps = 0.1
   
   var env = createEnvironment
   val vfunc = createValueFunction
@@ -47,7 +49,7 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
       },
     	gamma,
     	lambda,
-    	() => 0.0,
+    	() => 0.0, //(Math.random-0.5)*2*0.1, //0.0,
     	Array(13,8),
     	NeuralNetwork.logistic,
     	NeuralNetwork.identity
@@ -65,18 +67,6 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
         minEps max minEps+(iterCnt - iterDone + 0.0)/iterCnt*(maxEps-minEps)
   		}
   	}
-//  	new SarsaActor(vfunc, gamma, processMessage) with SoftmaxPolicy[RobotAction,RobotState] {
-//  	  private var stepsDone = 0;
-//      private val maxSteps = 1000000;
-//      private val minT = 0.01;
-//      private val maxT = 0.05;
-//  		def T() = {
-//  		  stepsDone += 1;
-//  		  val t = minT max maxT*(maxSteps - stepsDone)/(0.0+maxSteps)
-//  		  //println(" -- " + t)
-//  		  t
-//  		}
-//  	}
   }
 
   private var episodesDone = 0
@@ -172,195 +162,186 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
   private val controlPanel = new JPanel(new MigLayout("wrap 1", "[grow,fill]", "[]"))
   robotPane.add(controlPanel)
   
-  private val debugButton = new JButton("Debug information")
-  debugButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    println("Environment obstacles:")
-    println(env.obstacles.toList)
-    println("Model position: " + env.model.position + "; direction: " + env.model.direction)
-    println("Model bound box: " + env.model.boundBox)
-    println("Env state: " + env.state)
-    println("Env goal: " + env.goal)
-    
-    //setSize(3200,3000)
-  }})
-  controlPanel.add(debugButton)
+  private val debugButton = new RobotGUIButton("Debug information", controlPanel) {
+    def action() {
+	    println("Environment obstacles:")
+	    println(env.obstacles.toList)
+	    println("Model position: " + env.model.position + "; direction: " + env.model.direction)
+	    println("Model bound box: " + env.model.boundBox)
+	    println("Env state: " + env.state)
+	    println("Env goal: " + env.goal)
+     
+	    println("")
+	    println(new xml.PrettyPrinter(80, 2).format(vfunc.toXML))
+    }
+  }
 
-  private val resetButton = new JButton("Reset environment")
-  resetButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-  	env = createEnvironment
-  	envVisualizer.environment = env
-  	envVisualizer.repaint
-  	actor.beginEpisode(env, true)
-  }})
-  controlPanel.add(resetButton)
+  private val resetButton = new RobotGUIButton("Reset environment", controlPanel) {
+    def action() {
+	  	env = createEnvironment
+	  	envVisualizer.environment = env
+	  	envVisualizer.repaint
+	  	actor.beginEpisode(env, true)
+    }
+  } 
   
-  private val doStepButton = new JButton("Do one step")
-  doStepButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    actor.doStep()
-    updateTitle(-1,-1)
-    envVisualizer.repaint()
-// 	RobotLearningProcess(actor, 1, RobotGUI.this).execute
-  }})
-  controlPanel.add(doStepButton)
+  private val doStepButton = new RobotGUIButton("Do one step", controlPanel) {
+  	def action() {
+	    actor.doStep()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint()
+	// 	RobotLearningProcess(actor, 1, RobotGUI.this).execute
+    }
+  }
 
-  private val doThousandButton = new JButton("Do 1'000 step")
-  doThousandButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
+  private val doThousandButton = new RobotGUIButton("Do 1'000 step", controlPanel) {
+    def action() {
   //	RobotLearningProcess(actor, 1000, RobotGUI.this).execute
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 1000) {
-      	  actor.doStep()
-      	  if ((i+1) % 100 == 0) {
-      	    updateTitle(i+1, 1000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(doThousandButton)
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 1000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 100 == 0) {
+	      	    updateTitle(i+1, 1000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+    }
+  }
 
-  private val do100ThousandButton = new JButton("Do 100'000 step")
-  do100ThousandButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-  	//RobotLearningProcess(actor, 100000, RobotGUI.this).execute
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 100000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 100000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(do100ThousandButton)
+  private val do100ThousandButton = new RobotGUIButton("Do 100'000 step", controlPanel) {
+  	def action() {
+	  	//RobotLearningProcess(actor, 100000, RobotGUI.this).execute
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 100000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 1000 == 0) {
+	      	    updateTitle(i+1, 100000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+  	}
+  }
 
-  private val do500ThousandButton = new JButton("Do 500000 steps")
-  do500ThousandButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 500000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 500000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(do500ThousandButton)
+  private val do500ThousandButton = new RobotGUIButton("Do 500000 steps", controlPanel) {
+    def action() {
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 500000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 1000 == 0) {
+	      	    updateTitle(i+1, 500000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+	  }
+  }
+  
+  private val doMillButton = new RobotGUIButton("Do 1 million steps", controlPanel) {
+  	def action() {
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 1000000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 1000 == 0) {
+	      	    updateTitle(i+1, 1000000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+	  }
+  }
 
-  private val doMillButton = new JButton("Do 1 million steps")
-  doMillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 1000000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 1000000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(doMillButton)
+  private val do2MillButton = new RobotGUIButton("Do 2 million steps", controlPanel) {
+    def action() {
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 2000000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 1000 == 0) {
+	      	    updateTitle(i+1, 2000000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+	  }
+  }
 
-  private val do2MillButton = new JButton("Do 2 million steps")
-  do2MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 2000000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 2000000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(do2MillButton)
+  private val do3MillButton = new RobotGUIButton("Do 3 million steps", controlPanel) {
+  	def action() {
+	    (new Thread(new Runnable { 
+	      def run {
+	      	for (i <- 0 until 3000000) {
+	      	  actor.doStep()
+	      	  if ((i+1) % 1000 == 0) {
+	      	    updateTitle(i+1, 3000000)
+	      	    envVisualizer.repaint
+	      	  }
+	      	}
+	      }
+	    })).start()
+	    updateTitle(-1,-1)
+	    envVisualizer.repaint
+	  }
+  }
 
-  private val do3MillButton = new JButton("Do 3 million steps")
-  do3MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 3000000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 3000000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(do3MillButton)
+  private val screenStartButton = new RobotGUIButton("Start Screenshot Mode", controlPanel) {
+  	def action() {
+	    envVisualizer.inScreenshotMode = true
+	    envVisualizer.repaint
+  	}
+  }
 
-  private val do5MillButton = new JButton("Do 5 million steps")
-  do5MillButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    (new Thread(new Runnable { 
-      def run {
-      	for (i <- 0 until 5000000) {
-      	  actor.doStep()
-      	  if ((i+1) % 1000 == 0) {
-      	    updateTitle(i+1, 5000000)
-      	    envVisualizer.repaint
-      	  }
-      	}
-      }
-    })).start()
-    updateTitle(-1,-1)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(do5MillButton)
-
-  private val screenStartButton = new JButton("Start Screenshot Mode")
-  screenStartButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    envVisualizer.inScreenshotMode = true
-    envVisualizer.repaint
-  }})
-  controlPanel.add(screenStartButton)
-
-  private val screenEndButton = new JButton("End Screenshot Mode")
-  screenEndButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    envVisualizer.inScreenshotMode = false
-    envVisualizer.repaint
-  }})
-  controlPanel.add(screenEndButton)
+  private val screenEndButton = new RobotGUIButton("End Screenshot Mode", controlPanel) {
+  	def action() {
+	    envVisualizer.inScreenshotMode = false
+	    envVisualizer.repaint
+  	}
+  }
 
   private var savedEnv: RobotEnvironment = null
-  private val saveEnvButton = new JButton("Save Environment")
-  saveEnvButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    savedEnv = env.makeClone
-  }})
-  controlPanel.add(saveEnvButton)
+  private val saveEnvButton = new RobotGUIButton("Save Environment", controlPanel) {
+  	def action() {
+	    savedEnv = env.makeClone
+  	}
+  }
 
-  private val loadEnvButton = new JButton("Load Environment")
-  loadEnvButton.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) {
-    env = savedEnv.makeClone
-    envVisualizer.environment = env
-    actor.beginEpisode(env,true)
-    envVisualizer.repaint
-  }})
-  controlPanel.add(loadEnvButton)
+  private val loadEnvButton = new RobotGUIButton("Load Environment", controlPanel) {
+  	def action() {
+	    env = savedEnv.makeClone
+	    envVisualizer.environment = env
+	    actor.beginEpisode(env,true)
+	    envVisualizer.repaint
+  	}
+  }
 
   robotPane.requestFocusInWindow()
   setVisible(true);
+}
+
+abstract class RobotGUIButton(title: String, panel: JPanel) {
+  def action(): Unit
+  
+  val button = new JButton(title)
+  button.addActionListener(new ActionListener { def actionPerformed(event: ActionEvent) { action() } })
+  panel.add(button)
 }

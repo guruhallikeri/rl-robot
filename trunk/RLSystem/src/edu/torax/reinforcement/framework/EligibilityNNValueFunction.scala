@@ -8,8 +8,8 @@ class EligibilityNNValueFunction[A <: Action, S <: State] (
   Lambda: Double,							
   init: () => Double,						// initializer of weights
   hiddenLayersDimensions: Array[Int], 		// number of neurons in each HIDDEN layer
-  actFunction: (Double => Double,	Double => Double),		// activation function for hidden layers 
-  actFuncLast: (Double => Double, Double => Double)			// activation function for output layer
+  actFunction: NeuralNetwork.ActFunc,		// activation function for hidden layers 
+  actFuncLast: NeuralNetwork.ActFunc			// activation function for output layer
 ) 
 extends ValueFunction[A,S] {
   type Network = EligibilityNeuralNetwork
@@ -49,4 +49,6 @@ extends ValueFunction[A,S] {
   def beginEpisode() {
     for (net <- nets) net.clearEligibility()
   }
+  
+  def toXML: xml.Elem = throw new Exception("Not implemented!")
 }
