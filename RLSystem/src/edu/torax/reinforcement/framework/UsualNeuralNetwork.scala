@@ -3,7 +3,7 @@ package edu.torax.reinforcement.framework
 abstract class UsualNeuralNetwork (
   inputDimension: Int, 
   dimensions: Array[Int], 
-  activations: Array[(Double => Double, Double => Double)])
+  activations: Array[NeuralNetwork.ActFunc])
 extends NeuralNetwork(inputDimension, dimensions, activations) {
 	override def tuneUp(input: List[Double], output: List[Double]) {
 	  val eta = alpha
@@ -13,10 +13,10 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
         yield (0.0 /: (network(layer)(i) zip in)) ((x,y) => x + y._1 * y._2)).toArray 
 
       val grads = if (layer == depth-1) {
-        (indFields zip output.toArray) map  (x => activations(layer)._2(x._1)*(x._2 - activations(layer)._1(x._1)))
+        (indFields zip output.toArray) map  (x => activations(layer).deriv(x._1)*(x._2 - activations(layer).func(x._1)))
 	  	} else {
-	  	  (processLayer(Array(1.0) ++ (indFields map activations(layer)._1), layer+1) zip indFields) map 
-        	(x => x._1 * activations(layer)._2(x._2)) 
+	  	  (processLayer(Array(1.0) ++ (indFields map (x => activations(layer).func(x))), layer+1) zip indFields) map 
+        	(x => x._1 * activations(layer).deriv(x._2)) 
 	  	}
       
 	    val curLayer = network(layer)
@@ -46,4 +46,14 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
 	  processLayer((1.0 :: input).toArray, 0)
 	  ()
 	}
+ 
+	def toXML: xml.Elem =
+	  <UsualNeuralNetwork>
+	  	<activations size={activations.size.toString}>
+      	{ activations map (_.toXML) }
+      </activations>
+	  	<layers size={network.size.toString}>
+	  		{ network map ( layerToXml(_) ) }
+	  	</layers>
+	  </UsualNeuralNetwork>
 }

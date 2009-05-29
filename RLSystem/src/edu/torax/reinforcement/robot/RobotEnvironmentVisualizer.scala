@@ -107,7 +107,7 @@ class RobotEnvironmentVisualizer extends Component {
       	val off = 3
       	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
       	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
-      	g.drawOval(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
+      	g.drawRect(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
         
         for (i <- 1 until scrMoves-1) {
         	g.setColor(Color.blue)
@@ -123,7 +123,7 @@ class RobotEnvironmentVisualizer extends Component {
 	      	val off = 3
 	      	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
 	      	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
-	      	g.drawRect(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
+	      	g.drawOval(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
         }
       }
     }	

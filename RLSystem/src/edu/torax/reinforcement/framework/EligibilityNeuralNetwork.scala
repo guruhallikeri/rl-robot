@@ -3,7 +3,7 @@ package edu.torax.reinforcement.framework
 abstract class EligibilityNeuralNetwork (
   inputDimension: Int, 
   dimensions: Array[Int], 
-  activations: Array[(Double => Double, Double => Double)])
+  activations: Array[NeuralNetwork.ActFunc])
 extends NeuralNetwork(inputDimension, dimensions, activations) {
   require(dimensions(depth-1) == 1)
   def gamma: Double
@@ -20,10 +20,10 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
         yield (0.0 /: (network(layer)(i) zip in)) ((x,y) => x + y._1 * y._2)).toArray 
 
       val grads = if (layer == depth-1) {
-        (indFields zip output.toArray) map  (x => activations(layer)._2(x._1)*(x._2 - activations(layer)._1(x._1)))
+        (indFields zip output.toArray) map  (x => activations(layer).deriv(x._1)*(x._2 - activations(layer).func(x._1)))
 	  	} else {
-	  	  (processLayer(Array(1.0) ++ (indFields map activations(layer)._1), layer+1) zip indFields) map 
-        	(x => x._1 * activations(layer)._2(x._2)) 
+	  	  (processLayer(Array(1.0) ++ (indFields map (x => activations(layer).func(x))), layer+1) zip indFields) map 
+        	(x => x._1 * activations(layer).deriv(x._2)) 
 	  	}
       
 	    val curLayer = network(layer)
@@ -41,7 +41,7 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
       }
 
       if (layer == depth-1)
-        delta = output.head - activations(depth-1)._1(indFields(0))
+        delta = output.head - activations(depth-1).func(indFields(0))
 
       val I = curLayer(0).size
       for (j <- 0 until dimensions(layer)) {
@@ -71,4 +71,6 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
       neuron(i) = 0.0
     }
   }
+  
+  def toXML: xml.Elem = throw new Exception("Not implemented method!")
 }
