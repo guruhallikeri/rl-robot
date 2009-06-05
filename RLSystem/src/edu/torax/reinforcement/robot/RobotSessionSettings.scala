@@ -4,17 +4,17 @@ import framework._
 object RobotSessionSettings {
   object Defaults {
 	  // RL Settings
-	  val gamma = 0.99
+	  val gamma: Double = 0.99
 	
 	  // Environment Settings
-	  val envWidth = 40.0
-	  val envHeight = 40.0
-	  val envTurnAngle = 15.0
-	  val envTimeOut = 200
-	  val envMoveDistance = 0.9
-	  val envVisionAngle = 75.0
-	  val modelWidth = 1.0
-	  val modelHeight = 1.0
+	  val envWidth: Double = 40.0
+	  val envHeight: Double = 40.0
+	  val envTurnAngle: Double = 15.0
+	  val envTimeOut: Int = 200
+	  val envMoveDistance: Double = 0.9
+	  val envVisionAngle: Double = 75.0
+	  val modelWidth: Double = 1.0
+	  val modelHeight: Double = 1.0
 	
 		// Neural Network Settings
 		val stepSizeFunction: GeneralFunction = LinearDecreasingFunction(0.01, 0.3, 1000000)
@@ -27,16 +27,16 @@ object RobotSessionSettings {
 	  val epsFunction: GeneralFunction = LinearDecreasingFunction(0.00, 0.5, 300000)
 	 
 	  // Statistics Settings
-	  val lastMax = 5000			// how much last episodes to use for statistics
+	  val lastMax: Int = 5000			// how much last episodes to use for statistics
 	
 	  // Robot Environment Settings
-	  val maxDistanceToGoal = 1.0
-	  val maxDistanceToObs = 0.01
-	  val obsMinNumber = 4
-	  val obsMaxNumber = 10
-	  val obsMinRadius = 1.5
-	  val obsMaxRadius = 4.0
-	  val obsGap = 1.3
+	  val maxDistanceToGoal: Double = 1.0
+	  val maxDistanceToObs: Double = 0.01
+	  val obsMinNumber: Int = 4
+	  val obsMaxNumber: Int = 10
+	  val obsMinRadius: Double = 1.5
+	  val obsMaxRadius: Double = 4.0
+	  val obsGap: Double = 1.3
   }
 }
 
@@ -77,6 +77,35 @@ class RobotSessionSettings {
   var obsMaxRadius = Defaults.obsMaxRadius
   var obsGap = Defaults.obsGap
 
+  override def clone: RobotSessionSettings = {
+    val r = new RobotSessionSettings
+
+    r.gamma = this.gamma
+	  r.envWidth = this.envWidth
+	  r.envHeight = this.envHeight
+	  r.envTurnAngle = this.envTurnAngle
+	  r.envTimeOut = this.envTimeOut
+	  r.envMoveDistance = this.envMoveDistance
+	  r.envVisionAngle = this.envVisionAngle
+	  r.modelWidth = this.modelWidth
+	  r.modelHeight = this.modelHeight
+		r.stepSizeFunction = this.stepSizeFunction
+		r.nnStructure = this.nnStructure
+	  r.hiddenActFunc = this.hiddenActFunc
+	  r.outputActFunc = this.outputActFunc
+	  r.nnInitializer = this.nnInitializer
+	  r.epsFunction = this.epsFunction
+	  r.lastMax = this.lastMax			// how much last episodes to use for statistics
+	  r.maxDistanceToGoal = this.maxDistanceToGoal
+	  r.maxDistanceToObs = this.maxDistanceToObs
+	  r.obsMinNumber = this.obsMinNumber
+	  r.obsMaxNumber = this.obsMaxNumber
+	  r.obsMinRadius = this.obsMinRadius
+	  r.obsMaxRadius = this.obsMaxRadius
+	  r.obsGap = this.obsGap
+	  r
+  }
+  
   def toXML: xml.Elem = 
     <RobotSessionSettings>
 		  <gamma>{gamma}</gamma>

@@ -11,12 +11,10 @@ extends NeuralNetwork(inputDimension, dimensions, activations, alpha, initialize
   def this(elem: xml.NodeSeq) {
     this(
       ((elem \ "dimensions" \ "int") map (x => x.text.toInt)).toArray(0),
-      ((elem \ "dimensions" \ "int") map (x => x.text.toInt)).toList.tail.toArray,
-      //dimensionsFromXML(elem \ "dimensions").head, 
-      //dimensionsFromXML(elem \ "dimensions").tail, 
-	    ((elem \ "activation" \ "actFunc") map (x => NeuralNetwork.ActFunc.fromXML(x))).toArray,
+      ((elem \ "dimensions" \ "int") map (x => x.text.toInt)).toArray drop 1,
+	    ((elem \ "activations" \ "actFunc") map (x => NeuralNetwork.ActFunc.fromXML(x))).toArray,
       //activationsFromXML(elem \ "activations"),
-	    GeneralFunction.fromXML(elem \ "stepSizeFunction"),
+	    GeneralFunction.fromXML(elem \ "generalFunction"),
 	    NeuralNetwork.Initializer.fromXML(elem \ "initializer"))
     val net = networkFromXML(elem \ "layers")
     for (i <- 0 until net.size; 
@@ -69,7 +67,7 @@ extends NeuralNetwork(inputDimension, dimensions, activations, alpha, initialize
  
 	def toXML: xml.Elem =
 	  <UsualNeuralNetwork>
-	  	<dimensions>{ Array(inputDimension) ++ dimensions }</dimensions>
+	  	<dimensions>{ (Array(inputDimension) ++ dimensions) map (x => <int>{x}</int>) }</dimensions>
 	  	<activations>{ activations map (_.toXML) }</activations>
       {alpha.toXML}
       {initializer.toXML}
