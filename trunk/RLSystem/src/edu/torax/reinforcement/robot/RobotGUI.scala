@@ -8,7 +8,7 @@ import framework._
 import gutils._
 
 class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
-  var session = new RobotSession(processMessage)
+  var session = new RobotSession(new RobotSessionSettings, processMessage _)
   
   def updateTitle(numer: Int, denom: Int) {
     if (numer == -1) {
@@ -145,7 +145,7 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
       val fc = new JFileChooser(".")
       
       if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-      	xml.XML.saveFull(fc.getSelectedFile().getName(), session.toXML, "UTF-8", true, null)
+      	xml.XML.saveFull(fc.getSelectedFile().getName(), session.toXML, false, null)
       }
     }
   }
@@ -154,12 +154,7 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
     def action() {
       val fc = new JFileChooser(".")
       if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-        val oldSession = session
-        try {
-			    session = new RobotSession(xml.XML.loadFile(fc.getSelectedFile()), processMessage)
-        } catch {
-          case _ => session = oldSession
-        }
+		    session = new RobotSession(xml.XML.loadFile(fc.getSelectedFile()), processMessage _)
       }
 	    envVisualizer.session = session
 	    envVisualizer.repaint

@@ -3,12 +3,11 @@ package edu.torax.reinforcement.robot
 import framework._
 import gutils.Vector
 
-class RobotSession (messageProcessor: (framework.Actor.Event) => Unit) {
-  private var setts = new RobotSessionSettings
-  private var env: RobotEnvironment = null
+class RobotSession (val settings: RobotSessionSettings, messageProcessor: (framework.Actor.Event) => Unit) {
+	private var env: RobotEnvironment = null
   
   var inScreenshotMode = false
-  private var scrPositions = Array.make(setts.envTimeOut + 5, Vector(Double.NaN, Double.NaN))
+  private var scrPositions = Array.make(settings.envTimeOut + 5, Vector(Double.NaN, Double.NaN))
   private var scrMoves = 0
   
   def screenPositions = scrPositions
@@ -22,26 +21,26 @@ class RobotSession (messageProcessor: (framework.Actor.Event) => Unit) {
   private var vfunc: ValueFunction[RobotAction, RobotState] = new UsualNNValueFunction[RobotAction,RobotState](
     RobotEnvironment.actionsCount, 
     RobotState.dimensionality, 
-    setts.stepSizeFunction,
-  	setts.nnInitializer,
-  	setts.nnStructure,
-  	setts.hiddenActFunc,
-  	setts.outputActFunc)
+    settings.stepSizeFunction,
+  	settings.nnInitializer,
+  	settings.nnStructure,
+  	settings.hiddenActFunc,
+  	settings.outputActFunc)
   // ------ Actor creation --------
   recreateEnvironment()
   private var actr: Actor[RobotAction, RobotState] = createActor
   
   def createActor = {
     //recreateEnvironment()
-    val a = new SarsaActor(vfunc, setts.gamma, (x => ())) 
-  														with EpsGreedyPolicy[RobotAction,RobotState] { val eps = setts.epsFunction }
+    val a = new SarsaActor(vfunc, settings.gamma, (x => ())) 
+  														with EpsGreedyPolicy[RobotAction,RobotState] { val eps = settings.epsFunction }
     a.beginEpisode(env, true)
     a.listener = processMessage
     a
   }
   // ------------------------------
   
-  def recreateEnvironment() = environment = new RobotEnvironment(setts)
+  def recreateEnvironment() = environment = new RobotEnvironment(settings)
   def environment = env
   def environment_=(value: RobotEnvironment) {
     env = value
@@ -55,8 +54,7 @@ class RobotSession (messageProcessor: (framework.Actor.Event) => Unit) {
   
   def valueFunction = vfunc
   def actor = actr
-  def settings = setts
-  
+
   private var episodesDone = 0
   private var stepsDone = 0
   private var reachedCnt = 0
@@ -124,7 +122,7 @@ class RobotSession (messageProcessor: (framework.Actor.Event) => Unit) {
 
   def toXML = 
     <RobotSession>
-  		<settings>{setts.toXML}</settings>
+  		<settings>{settings.toXML}</settings>
     	<environment>{env.toXML}</environment>
     	<valueFunction>{vfunc.toXML}</valueFunction>
       <episodesDone>{episodesDone}</episodesDone>
@@ -143,9 +141,8 @@ class RobotSession (messageProcessor: (framework.Actor.Event) => Unit) {
   	</RobotSession>
      
   def this(node: xml.NodeSeq, messageProcessor: (framework.Actor.Event) => Unit) = {
-    this(messageProcessor)
-    setts = new RobotSessionSettings(node \ "settings" \ "RobotSessionSettings")
-    env = new RobotEnvironment(node \ "environment" \ "RobotEnvironment", setts)
+    this(new RobotSessionSettings(node \ "settings" \ "RobotSessionSettings"), messageProcessor)
+    env = new RobotEnvironment(node \ "environment" \ "RobotEnvironment", settings)
     vfunc = new UsualNNValueFunction(node \ "valueFunction" \ "UsualNNValueFunction")
      
     episodesDone = (node \ "episodesDone").text.toInt

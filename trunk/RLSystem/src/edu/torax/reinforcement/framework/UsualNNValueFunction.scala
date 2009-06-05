@@ -55,9 +55,11 @@ class UsualNNValueFunction[A <: Action, S <: State] (
       NeuralNetwork.ActFunc.fromXML(elem \ "outputActFunc" \ "actFunc")
     )
     var i=0
-    for (val node <- (elem \ "networks" \ "network")) {
+    for (val node <- (elem \ "networks" \ "UsualNeuralNetwork")) {
       nets(i) = NeuralNetwork.fromXML(node).asInstanceOf[Network]
       i += 1
     }
+    if (i != actionsCount) 
+      throw new Exception("Neural networks amount not sufficient! Needed: " + actionsCount + ", but found: " + i)
   }
 }

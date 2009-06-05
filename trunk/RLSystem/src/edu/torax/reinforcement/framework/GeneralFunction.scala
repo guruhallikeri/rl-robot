@@ -15,7 +15,7 @@ object GeneralFunction {
 case class LinearDecreasingFunction(min: Double, max: Double, timeRange: Int) extends GeneralFunction("linearDecreasing") {
   def this(elem: xml.NodeSeq) = {
     this((elem \ "@min").text.toDouble, (elem \ "@max").text.toDouble, (elem \ "@timeRange").text.toInt)
-    itersDone = (elem \ "@itersDone").text.toInt
+    itersDone = if ((elem \ "@itersDone").length != 0) (elem \ "@itersDone").text.toInt else 0
   }
   
   private var itersDone = 0
