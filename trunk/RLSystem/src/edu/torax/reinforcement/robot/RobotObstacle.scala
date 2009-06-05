@@ -7,6 +7,7 @@ trait RobotObstacle {
 	def distanceTo(point: Vector): Double
 	def contains(point: Vector): Boolean						// tells wheter specified point lies inside the obstacle
   def makeClone: RobotObstacle
+  def toXML: xml.Elem
 }
 
 class PolygonalRobotObstacle extends RobotObstacle
@@ -32,6 +33,11 @@ class PolygonalRobotObstacle extends RobotObstacle
 	  r.points = this.points map (x => x.clone)
     r
 	}
+ 
+	def toXML = 
+    <RobotObstacle type="polygonal">
+		 	{points map (_.toXML)}
+    </RobotObstacle>
 }
 
 object PolygonalRobotObstacle {
@@ -58,4 +64,15 @@ object PolygonalRobotObstacle {
 			obs
 		}
 	}
+ 
+  def fromXML(node: xml.NodeSeq) = {
+    if ((node \ "@type").text != "polygonal")
+      throw new Exception("Unknown type of RobotObstacle: " + (node \ "@type").text)
+    else {
+      val r = new PolygonalRobotObstacle
+      r.points = ((node \ "vector") map (Vector.fromXML(_))).toList
+      r
+    }
+  }
 }
+	

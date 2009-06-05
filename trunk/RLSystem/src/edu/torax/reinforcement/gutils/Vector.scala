@@ -29,6 +29,12 @@ case class Vector(x: Double, y: Double) {
   }
   
   override def clone = Vector(x,y)
+  
+  def toXML =
+    <vector>
+  		<x>{x}</x>
+      <y>{y}</y>
+    </vector>
 }  
 
 object Vector {
@@ -40,4 +46,6 @@ object Vector {
   	def correct(a: Double) = if (a < 0) a + 2.0*Math.Pi else if (a >= 2.0*Math.Pi) a-2.0*Math.Pi else a
   	correct(Math.atan2(v1.y, v1.x) - Math.atan2(v2.y, v2.x)) 
   }
+  
+  def fromXML(node: xml.NodeSeq) = Vector((node \ "x").text.toDouble, (node \ "y").text.toDouble)
 }

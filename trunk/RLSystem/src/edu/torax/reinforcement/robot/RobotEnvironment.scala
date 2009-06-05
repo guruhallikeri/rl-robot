@@ -3,23 +3,30 @@ import framework._
 import gutils._
 import robot._ 
 
-class RobotEnvironment (
-  val width: Double,				// width of the environment (room)
-  val height: Double,				// height of the environment (room)
-  val timeOut: Int,					// number of moves till time out
-  val turnAngle: Double,			// what angle to turn left or right in one action
-  val moveDistance: Double,			// what distance to move in one action
-  val visionAngle: Double			// the central angle of vision sector
-) extends Environment[RobotAction, RobotState] {
+object RobotEnvironment {
   private val actions: Array[RobotAction] = 
     Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,
           RobotTurnLeftAction,RobotTurnRightAction)
+  val actionsCount = actions.size
+}
 
+class RobotEnvironment (
+  val settings: RobotSessionSettings
+) extends Environment[RobotAction, RobotState] {
+	import RobotEnvironment._
+	val actionsCount = RobotEnvironment.actionsCount
+ 
+  val width: Double = settings.envWidth								// width of the environment (room)
+  val height: Double = settings.envHeight							// height of the environment (room)
+  val timeOut: Int = settings.envTimeOut							// number of moves till time out
+  val turnAngle: Double = settings.envTurnAngle				// what angle to turn left or right in one action
+  val moveDistance: Double = settings.envMoveDistance	// what distance to move in one action
+  val visionAngle: Double	= settings.envVisionAngle		// the central angle of vision sector
+  
   val envBounds = List(Segment(0,0,0,height), Segment(0,height,width,height), 
                        Segment(width,height,width,0), Segment(0,0,width,0))
   
 
-  def actionsCount: Int = actions.size
   def prepareAction(n: Int): RobotAction = actions(n)
 
   var obstacles = generateObstacles //new Array[RobotObstacle](0)
@@ -50,7 +57,7 @@ class RobotEnvironment (
   private var goalReached = false
   def isGoalReached = goalReached
   
-  private def checkGoalReached: Boolean = curState.goalDistance < RobotEnvironment.MaxDistanceToGoal
+  private def checkGoalReached: Boolean = curState.goalDistance < settings.maxDistanceToGoal
 
   private var modelCrashed = false
   def isModelCrashed = modelCrashed
@@ -59,7 +66,7 @@ class RobotEnvironment (
     val modelBoundBox = model.boundBox
     val minObsDist = (Double.PositiveInfinity /: obstacles) ((x,y) => x min (y distanceTo modelBoundBox))
     val minBoundsDist = (Double.PositiveInfinity /: envBounds) ((x,y) => x min Polygon.distanceBetween(modelBoundBox, y))
-    Math.min(minObsDist, minBoundsDist) < RobotEnvironment.MaxDistanceToObs
+    Math.min(minObsDist, minBoundsDist) < settings.maxDistanceToObs
   }
   
   private def reward: Double = {
@@ -86,7 +93,7 @@ class RobotEnvironment (
  		val model = new SimpleRobotModel(x, y, dx, dy, 1.0, 1.0)
  		//println(x + " ---   " + y + " ---   " + dx + " ---   " + dy)
  		val modelBoundBox = model.boundBox
- 		if (obstacles exists (x => (x distanceTo modelBoundBox) < RobotEnvironment.MaxDistanceToObs)) {
+ 		if (obstacles exists (x => (x distanceTo modelBoundBox) < settings.maxDistanceToObs)) {
  			createModel
  		} else {
  			model
@@ -94,7 +101,7 @@ class RobotEnvironment (
   }
 
   private def generateObstacles: Array[RobotObstacle] = {
-    import RobotEnvironment._
+    import settings._
     
     val N = obsMinNumber + (Math.random * (obsMaxNumber - obsMinNumber)).toInt
     //println("Obstacle count: " + N)
@@ -109,12 +116,12 @@ class RobotEnvironment (
   }
   
   def generateGoal: Vector = {
-    import RobotEnvironment._
+    import settings._
     
  		val goal = Vector(obsGap + Math.random*(width - 2*obsGap), obsGap + Math.random*(height - 2*obsGap))
  		val dst = Math.min((Double.PositiveInfinity /: obstacles) {(d, obs) => d min (obs distanceTo goal) },
                       Polygon.distanceBetween(model.boundBox, goal))
- 		if (dst < RobotEnvironment.MaxDistanceToObs) {
+ 		if (dst < maxDistanceToObs) {
  			generateGoal
  		} else {
  			goal
@@ -122,7 +129,7 @@ class RobotEnvironment (
   }
   
   def makeClone = {
-    val env = new RobotEnvironment(width, height, timeOut, turnAngle, moveDistance, visionAngle)
+    val env = new RobotEnvironment(settings)
     env.obstacles = this.obstacles map (x => x.makeClone)
     env.model = this.model.makeClone 
     env.goal = this.goal.clone
@@ -132,14 +139,27 @@ class RobotEnvironment (
     env.curState = RobotState(env)
     env
   }
-}
-
-object RobotEnvironment {
-  val MaxDistanceToGoal = 1.0	// max distance from model to goal so that we say model is at the goal
-  val MaxDistanceToObs = 0.01
-  val obsMinNumber = 4
-  val obsMaxNumber = 10
-  val obsMinRadius = 1.5
-  val obsMaxRadius = 4.0
-  val obsGap = 1.3
+  
+  def toXML: xml.Elem = 
+    <RobotEnvironment>
+    	<obstacles>{obstacles map (_.toXML)}</obstacles>
+      <model>{model.toXML}</model>
+      <goal>{goal.toXML}</goal>
+      <stepsDone>{stepsDone}</stepsDone>
+      <terminated>{terminated}</terminated>
+      <goalReached>{goalReached}</goalReached>
+      <modelCrashed>{modelCrashed}</modelCrashed>
+    </RobotEnvironment>
+     
+  def this(node: xml.NodeSeq, settings: RobotSessionSettings) = {
+    this(settings)
+    obstacles = ((node \ "obstacles" \ "RobotObstacle") map (PolygonalRobotObstacle.fromXML(_))).toArray
+    model = RobotModel.fromXML(node \ "model" \ "RobotModel")
+    goal = Vector.fromXML(node \ "goal" \ "vector")
+    stepsDone = (node \ "stepsDone").text.toInt
+    terminated = (node \ "terminated").text.toBoolean
+    goalReached = (node \ "goalReached").text.toBoolean
+    modelCrashed = (node \ "modelCrashed").text.toBoolean
+    curState = RobotState(this)
+  }
 }

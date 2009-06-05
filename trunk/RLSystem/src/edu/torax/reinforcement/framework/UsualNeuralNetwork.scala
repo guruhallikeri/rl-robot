@@ -1,12 +1,32 @@
 package edu.torax.reinforcement.framework
 
-abstract class UsualNeuralNetwork (
+class UsualNeuralNetwork (
   inputDimension: Int, 
   dimensions: Array[Int], 
-  activations: Array[NeuralNetwork.ActFunc])
-extends NeuralNetwork(inputDimension, dimensions, activations) {
+  activations: Array[NeuralNetwork.ActFunc],
+  alpha: GeneralFunction,
+  initializer: NeuralNetwork.Initializer
+)
+extends NeuralNetwork(inputDimension, dimensions, activations, alpha, initializer) {
+  def this(elem: xml.NodeSeq) {
+    this(
+      ((elem \ "dimensions" \ "int") map (x => x.text.toInt)).toArray(0),
+      ((elem \ "dimensions" \ "int") map (x => x.text.toInt)).toList.tail.toArray,
+      //dimensionsFromXML(elem \ "dimensions").head, 
+      //dimensionsFromXML(elem \ "dimensions").tail, 
+	    ((elem \ "activation" \ "actFunc") map (x => NeuralNetwork.ActFunc.fromXML(x))).toArray,
+      //activationsFromXML(elem \ "activations"),
+	    GeneralFunction.fromXML(elem \ "stepSizeFunction"),
+	    NeuralNetwork.Initializer.fromXML(elem \ "initializer"))
+    val net = networkFromXML(elem \ "layers")
+    for (i <- 0 until net.size; 
+         	j <- 0 until net(i).size;
+    				k <- 0 until net(i)(j).size)
+      				network(i)(j)(k) = net(i)(j)(k)
+  }
+    
 	override def tuneUp(input: List[Double], output: List[Double]) {
-	  val eta = alpha
+	  val eta = alpha()
    
 	  def processLayer(in: Array[Double], layer: Int): Array[Double] = {
 	    val indFields = (for (i <- 0 until dimensions(layer)) 
@@ -49,11 +69,10 @@ extends NeuralNetwork(inputDimension, dimensions, activations) {
  
 	def toXML: xml.Elem =
 	  <UsualNeuralNetwork>
-	  	<activations size={activations.size.toString}>
-      	{ activations map (_.toXML) }
-      </activations>
-	  	<layers size={network.size.toString}>
-	  		{ network map ( layerToXml(_) ) }
-	  	</layers>
+	  	<dimensions>{ Array(inputDimension) ++ dimensions }</dimensions>
+	  	<activations>{ activations map (_.toXML) }</activations>
+      {alpha.toXML}
+      {initializer.toXML}
+	  	<layers>{ network map (layerToXml(_)) }</layers>
 	  </UsualNeuralNetwork>
 }

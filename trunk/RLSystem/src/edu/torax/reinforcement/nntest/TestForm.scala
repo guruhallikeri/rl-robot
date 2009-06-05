@@ -15,26 +15,8 @@ import framework._
 class TestForm extends JFrame("Neural Network Testing (c) 2009 Andrii Nakryiko") {
   var cnt = 0
 	val nn = new UsualNeuralNetwork(1, Array(6, 6, 1),
-			Array(NeuralNetwork.logisticNeg, NeuralNetwork.logisticNeg, NeuralNetwork.identity)
-			//Array(NeuralNetwork.logistic, NeuralNetwork.logistic)
-			//Array(((x: Double) => Math.cos(6.0*Math.Pi*x), (x: Double) => -6.0*Math.Pi*Math.sin(6.0*Math.Pi*x)))
-	) {
-		def alpha() = { 
-		  val r = Math.max(0.01, 0.5*(200000-cnt)/200000.0)
-		  cnt += 1
-		  //println(cnt + " -- " + r)
-		  r
-		  0.5
-		}
-		//  val initializer = 1.0
-		def initializer() = {
-			val t = (2.0*Math.random - 1.0)*0.3
-			//		println(" --- " + t)
-			t
-			//  		1.0
-		}
-	}
-
+			Array(NeuralNetwork.ActFunc.logisticNeg, NeuralNetwork.ActFunc.logisticNeg, NeuralNetwork.ActFunc.identity),
+			LinearDecreasingFunction(0.01, 0.5, 200000), NeuralNetwork.UniformRandomInitializer(-0.3, 0.3))
 	private val pane = new JPanel(new MigLayout("", "[grow,fill][180px]", "[grow,fill]"))
 	def sinn(x: Double) = 0.5 * (3.5*x*(1-x)*Math.sin(2.8*Math.Pi*x) - 1.7 * Math.sin(3.7*Math.Pi*x) * (x+0.05) * (1.5 - x) / (1.0 + Math.exp(-5.7*x + 0.1))) //Math.sin(3.0*Math.Pi*x)
 

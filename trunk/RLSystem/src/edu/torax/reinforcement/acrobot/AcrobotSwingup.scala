@@ -47,16 +47,11 @@ object AcrobotSwingup extends SimpleGUIApplication {
   val vfunc = new UsualNNValueFunction[AcrobotAction, AcrobotState] (
     env.actionsCount,
     AcrobotState.dimensionality,
-    () => {
-      iCnt += 1
-      Math.max(minAlpha, maxAlpha*(iterCnt-iCnt)/iterCnt)},
-//    () => alpha,
-    gamma,
-    lambda,
-    () => (2.0*Math.random - 1.0)*0.3,
+    LinearDecreasingFunction(minAlpha, maxAlpha, iterCnt),
+    NeuralNetwork.UniformRandomInitializer(-0.3, 0.3),
     Array(7, 3),
-    NeuralNetwork.logistic,
-    NeuralNetwork.identity
+    NeuralNetwork.ActFunc.logistic,
+    NeuralNetwork.ActFunc.identity
   )
   private var episodesDone = 0
   private var episodeStartStep = 0
@@ -88,7 +83,7 @@ object AcrobotSwingup extends SimpleGUIApplication {
       stepsDone += 1
   }
   val actor = new SarsaActor(vfunc, gamma, processMessage) with EpsGreedyPolicy[AcrobotAction,AcrobotState] {
-    val eps = greedyEps
+    val eps = LinearDecreasingFunction(greedyEps, greedyEps, 1)
   }
   
   val drawer = new AcrobotDrawer(env.model)

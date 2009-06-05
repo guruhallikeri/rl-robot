@@ -2,7 +2,7 @@ package edu.torax.reinforcement.framework
 
 abstract class Actor[A <: Action, S <: State] (
   val valueFunction: ValueFunction[A,S],
-  listener: Actor.Event => Unit ) 
+  var listener: Actor.Event => Unit ) 
 {
   private var env: Environment[A,S] = null
   def environment = env
