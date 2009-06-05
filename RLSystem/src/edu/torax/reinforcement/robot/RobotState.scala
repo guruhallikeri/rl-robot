@@ -20,7 +20,7 @@ case class RobotState(env: RobotEnvironment) extends State {
 	def encode: List[Double] = coarseEncode(ranges, goalDistance, goalAngle)
 
 	private def getClosestObstacleDistance(modelBound: List[Vector], obstacles: Array[RobotObstacle], sect: Sector): Double = {
-	  if (obstacles exists (x => (x distanceTo modelBound) < RobotEnvironment.MaxDistanceToObs)) 
+	  if (obstacles exists (x => (x distanceTo modelBound) < env.settings.maxDistanceToObs)) 
      return 0.0
    
 		var minObsDist = (maxDist /: obstacles) { (x,y) => x min (y distanceTo sect) }

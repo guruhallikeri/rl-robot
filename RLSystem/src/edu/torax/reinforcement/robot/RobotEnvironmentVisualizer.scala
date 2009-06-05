@@ -9,22 +9,7 @@ import java.awt.RenderingHints
 import reinforcement.gutils.Vector
   
 class RobotEnvironmentVisualizer extends Component {
-  private var env: RobotEnvironment = null
-  def environment = env
-  def environment_=(env: RobotEnvironment) {
-    this.env = env
-    scrMoves = 1
-    scrPositions(0) = env.model.position
-  }
-  
-  var inScreenshotMode = false
-  private val scrPositions = new Array[Vector](2000)
-  private var scrMoves = 0
-  
-  def addPosition(pos: Vector) {
-	  scrPositions(scrMoves) = pos
-	  scrMoves += 1
-  }
+  var session: RobotSession = null
   
   override def paint(gr: Graphics)
   {
@@ -46,6 +31,7 @@ class RobotEnvironmentVisualizer extends Component {
     g.setStroke(new BasicStroke(1.3f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER))
    	g.drawRect(offx, offy, wid, hei)
 
+    val environment = session.environment
     if (environment != null) {
       val xCoef: Double = (0.0 + wid) / environment.width
       val yCoef: Double = (0.0 + hei) / environment.height
@@ -74,7 +60,7 @@ class RobotEnvironmentVisualizer extends Component {
       g.drawLine(gPosReal._1 - 5, gPosReal._2 - 5, gPosReal._1 + 5, gPosReal._2 + 5)
       g.drawLine(gPosReal._1 - 5, gPosReal._2 + 5, gPosReal._1 + 5, gPosReal._2 - 5)
 	    
-      if (!inScreenshotMode) {
+      if (!session.inScreenshotMode) {
 	      //draw vision sectors
 	      val sectorAngle = environment.visionAngle / RobotState.visionSectorsNumber
 	      g.setColor(Color.white)
@@ -103,23 +89,23 @@ class RobotEnvironmentVisualizer extends Component {
       } else {
       	g.setColor(Color.blue)
       	g.setStroke(new BasicStroke(1.2f))
-      	val pos = scrPositions(0)
+      	val pos = session.screenPositions(0)
       	val off = 3
       	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
       	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
       	g.drawRect(transX(pos)-off*2, transY(pos)-off*2, 4*off, 4*off)  
         
-        for (i <- 1 until scrMoves-1) {
+        for (i <- 1 until session.screenMoves-1) {
         	g.setColor(Color.blue)
         	g.setStroke(new BasicStroke(1.2f))
-        	val pos = scrPositions(i)
+        	val pos = session.screenPositions(i)
         	val off = 3
         	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
         	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  
         }
         
-        if (scrMoves > 1) {
-	      	val pos = scrPositions(scrMoves-1)
+        if (session.screenMoves > 1) {
+	      	val pos = session.screenPositions(session.screenMoves-1)
 	      	val off = 3
 	      	g.drawLine(transX(pos)-off, transY(pos), transX(pos)+off, transY(pos))  
 	      	g.drawLine(transX(pos), transY(pos)-off, transX(pos), transY(pos)+off)  

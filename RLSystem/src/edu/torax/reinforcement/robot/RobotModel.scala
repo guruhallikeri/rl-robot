@@ -12,6 +12,14 @@ trait RobotModel {
   def distanceTo(p: Vector): Double	// distance from model to the specified point
   def boundBox: List[Vector]				// bounding box of the model
   def makeClone: RobotModel
+  def toXML: xml.Elem
+}
+
+object RobotModel {
+  def fromXML(node: xml.NodeSeq): RobotModel = (node \ "@type").text match {
+    case "simple" => new SimpleRobotModel(node)
+    case unknown => throw new Exception("Unknown type of RobotModel: " + unknown)
+  }
 }
 
 class SimpleRobotModel (
@@ -22,6 +30,30 @@ class SimpleRobotModel (
   val width: Double,
   val height: Double 
 ) extends RobotModel {
+  def toXML = 
+    <RobotModel type="simple">
+  		<startX>{startX}</startX>
+  		<startY>{startY}</startY>
+  		<startDx>{startDx}</startDx>
+  		<startDy>{startDy}</startDy>
+  		<width>{width}</width>
+  		<height>{height}</height>
+  		<pos>{pos.toXML}</pos>
+      <dir>{dir.toXML}</dir>
+    </RobotModel>
+  
+  def this(node: xml.NodeSeq) = {
+    this(
+      (node \ "startX").text.toDouble,
+      (node \ "startY").text.toDouble,
+      (node \ "startDx").text.toDouble,
+      (node \ "startDy").text.toDouble,
+      (node \ "width").text.toDouble,
+      (node \ "height").text.toDouble
+    )
+    pos = Vector.fromXML(node \ "pos" \ "vector")
+    dir = Vector.fromXML(node \ "dir" \ "vector")
+  }
   
   def makeClone: RobotModel = {
     val r = new SimpleRobotModel(startX, startY, startDx, startDy, width, height)
@@ -68,4 +100,3 @@ class SimpleRobotModel (
     modelPoints
   }
 }
-		

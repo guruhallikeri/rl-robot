@@ -14,7 +14,7 @@ class PolygonTests extends FunSuite {
                   Vector(6.442347283836307, 18.39638518140336), 
                   Vector(7.193548907188216, 17.736312366424997), 
                   Vector(6.533476092209856, 16.985110743073086))
-    assert (Polygon.distanceBetween(p1,p2) < 2.0*RobotEnvironment.MaxDistanceToGoal)
+    assert (Polygon.distanceBetween(p1,p2) < 2.0*RobotSessionSettings.Defaults.maxDistanceToGoal)
   }
  
 	test ("Obstacle collision") {
@@ -28,7 +28,7 @@ class PolygonTests extends FunSuite {
                  Vector(22.083758592533265, 16.626565295644916), 
                  Vector(22.687507851886622, 17.423739575103475), 
                  Vector(23.48468213134518, 16.81999031575012))
-    assert (Polygon.distanceBetween(p1,p2) < 2.0*RobotEnvironment.MaxDistanceToGoal)
+    assert (Polygon.distanceBetween(p1,p2) < 2.0*RobotSessionSettings.Defaults.maxDistanceToGoal)
 	}
  
 	test ("more tests") {
@@ -63,7 +63,7 @@ class PolygonTests extends FunSuite {
     )
     var cnt = 0
     for (pp <- p2) {
-      if (Polygon.distanceBetween(p1, pp) < RobotEnvironment.MaxDistanceToGoal)
+      if (Polygon.distanceBetween(p1, pp) < RobotSessionSettings.Defaults.maxDistanceToGoal)
         cnt += 1
     }
     expect (1) { cnt }
