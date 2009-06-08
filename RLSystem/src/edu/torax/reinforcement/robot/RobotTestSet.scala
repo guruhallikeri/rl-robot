@@ -28,8 +28,12 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
   }
   
 	def execute(fromTest: Int, toTest: Int, path: String): (Long, Int) = {
+	  println("  -- Starting executing <" + suitName + "." + name + "> test set.")
 	  val startTime = (new java.util.Date).getTime
    
+	  val testSetDir = new File(new File(path), "test-set." + name)
+	  testSetDir.mkdir
+
 	  def process(pars: List[List[RobotTestParam]], curTest: Int, 
                 curSetts: RobotSessionSettings): (Int, Int) = pars match {
       case x :: xs =>
@@ -47,7 +51,7 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
         (testsPassed, testsDone)
       case Nil => 
         if (curTest >= fromTest && curTest <= toTest) {
-          val wDir = new File(new File(path), String.format("test-case.%03d", curTest.asInstanceOf[Object]))
+          val wDir = new File(testSetDir, String.format("test-case.%03d", curTest.asInstanceOf[Object]))
           wDir.mkdir
 
           val stats: Array[List[RobotTestDumpReport]] = Array.make(attemptsToDo, Nil)
@@ -59,7 +63,8 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
                                        curSetts, listener, 
                                        wDir.getPath, suitName, name)
           val execTime = test.execute()
-          println("  -- " + suitName + "." + name + ": test case #" + curTest + " completed in " + execTime/1000.0 + "s.")
+          println("  -- " + suitName + "." + name + ": test case #" + curTest + 
+                    " completed in " + execTime/1000.0 + " secs.")
           
           var xmlElems: List[xml.Elem] = Nil
           val sz = stats(0).size
@@ -85,6 +90,7 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
                   qC(k) += 1
                 } 
               }
+              stats(j) = stats(j).tail
             }
             for (k <- 0 until q.size) {
               if (qC(k) != 0) {
@@ -93,9 +99,9 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
             }
             val x = 
               <testCaseAverages itersDone={itersDone.toString}>
-              	<reachedPercentage>{reached / attemptsToDo}</reachedPercentage>
-              	<crashedPercentage>{crashed / attemptsToDo}</crashedPercentage>
-              	<timedOutPercentage>{timedOut / attemptsToDo}</timedOutPercentage>
+              	<reachedPercentage>{100.0 * reached / attemptsToDo}</reachedPercentage>
+              	<crashedPercentage>{100.0 * crashed / attemptsToDo}</crashedPercentage>
+              	<timedOutPercentage>{100.0 * timedOut / attemptsToDo}</timedOutPercentage>
               	{(q zip RobotTestCase.quantiles) map (x => 
               	  <quant val={x._2.toString}>{x._1}</quant>
               	)}
@@ -107,13 +113,14 @@ class RobotTestSet(elem: xml.NodeSeq, val suitName: String,
             	{xmlElems}
             </testCaseSummary>
           val summaryFile = new File(wDir, suitName + "." + name + "-" + curTest + ".summary.xml") 
-          xml.XML.saveFull(summaryFile.getPath, statistics, false, null)
+          RobotXML.save(summaryFile.getPath, statistics)
           (1, 1)
         } else {
           (1, 0)
         }
 	  }
-   
-	  (0,0)
+	  val (passed, done) = process(params, 1, new RobotSessionSettings)
+  	println("  -- Test set <" + suitName + "." + name + "> completed: [" + done + "/" + passed + "].")
+	  ((new java.util.Date).getTime - startTime, done)
 	}
 }

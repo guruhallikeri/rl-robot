@@ -56,14 +56,14 @@ class RobotSessionSettings {
   var modelHeight = Defaults.modelHeight
 
 	// Neural Network Settings
-	var stepSizeFunction = Defaults.stepSizeFunction
-	var nnStructure = Defaults.nnStructure
+	var stepSizeFunction = Defaults.stepSizeFunction.makeCopy
+	var nnStructure = Defaults.nnStructure.toArray
   var hiddenActFunc = Defaults.hiddenActFunc
   var outputActFunc = Defaults.outputActFunc
   var nnInitializer = Defaults.nnInitializer
 
   // Actor Settings
-  var epsFunction = Defaults.epsFunction
+  var epsFunction = Defaults.epsFunction.makeCopy
 
   // Statistics Settings
   var lastMax = Defaults.lastMax			// how much last episodes to use for statistics
@@ -89,12 +89,12 @@ class RobotSessionSettings {
 	  r.envVisionAngle = this.envVisionAngle
 	  r.modelWidth = this.modelWidth
 	  r.modelHeight = this.modelHeight
-		r.stepSizeFunction = this.stepSizeFunction
-		r.nnStructure = this.nnStructure
+		r.stepSizeFunction = this.stepSizeFunction.makeCopy
+		r.nnStructure = this.nnStructure.toArray
 	  r.hiddenActFunc = this.hiddenActFunc
 	  r.outputActFunc = this.outputActFunc
 	  r.nnInitializer = this.nnInitializer
-	  r.epsFunction = this.epsFunction
+	  r.epsFunction = this.epsFunction.makeCopy
 	  r.lastMax = this.lastMax			// how much last episodes to use for statistics
 	  r.maxDistanceToGoal = this.maxDistanceToGoal
 	  r.maxDistanceToObs = this.maxDistanceToObs
