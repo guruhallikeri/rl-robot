@@ -16,13 +16,15 @@ class RobotTestCase(val num: Int, val attemptsToDo: Int, val iterationsToDo: Int
                     path: String, suit: String, set: String) {
   import RobotTestCase._
   def execute(): Long = {
+    println("    --- Test case <" + suit + "." + set + "-" + num + "> started:")
     val globalStartTime = (new java.util.Date).getTime
     
     def dummyProcessor(e: framework.Actor.Event) {}
     
     for (attempt <- 1 to attemptsToDo) {
+      print("      --= Attempt #" + attempt + " started")
 			val startTime = (new java.util.Date).getTime
-			val session = new RobotSession(settings, dummyProcessor _)
+			val session = new RobotSession(settings.clone, dummyProcessor _)
 			val quants = Array.make(quantCount, NaN)
 			
 			var i = 1
@@ -31,7 +33,7 @@ class RobotTestCase(val num: Int, val attemptsToDo: Int, val iterationsToDo: Int
 			  session.actor.doStep()
 			  
 			  if ((i & 255) == 0 && i >= 50000) { // every 256th iteration check quantiles
-					val q = session.reachedCount/(session.reachedCount + session.crashedCount + session.timedOutCount)
+					val q = 100*session.reachedCount/(session.reachedCount + session.crashedCount + session.timedOutCount)
 					for (j <- 0 until quantCount) {
 					  if (q >= quantiles(j) && i < quants(j))
 					  	quants(j) = i
@@ -44,36 +46,39 @@ class RobotTestCase(val num: Int, val attemptsToDo: Int, val iterationsToDo: Int
 					listener(RobotTestDumpReport(num, attempt, i, quants.toArray, 
 												 session.reachedCount, session.crashedCount, session.timedOutCount))
 					
-					val fileName: String = String.format("%s.%s-%d.att%02d.i%06d.xml", suit, set, 
+					val fileName: String = String.format("%s.%s-%d.att%02d.i%06d", suit, set, 
                                   num.asInstanceOf[Object], attempt.asInstanceOf[Object], i.asInstanceOf[Object])
-					val file = new File(new File(path), fileName)
-					xml.XML.saveFull(file.getPath, session.toXML, false, null)
+					val file = new File(new File(path), fileName + ".xml")
+					RobotXML.save(file.getPath, session.toXML)
 					
 					val all = 0.0 + session.reachedCount + session.crashedCount + session.timedOutCount
-					val summary = "summary." + fileName
+					val summaryFile = new File(new File(path), fileName + ".summary.xml")
 					val summaryXML: xml.Elem = 
 						<testCaseSummary>
 							<suit>{suit}</suit>
 							<set>{set}</set>
 							<caseNumber>{num}</caseNumber>
-							<reachedCount>session.reachedCount</reachedCount>
-							<crashedCount>session.crashedCount</crashedCount>
-							<timedOutCount>session.timedOutCount</timedOutCount>
+							<reachedCount>{session.reachedCount}</reachedCount>
+							<crashedCount>{session.crashedCount}</crashedCount>
+							<timedOutCount>{session.timedOutCount}</timedOutCount>
 							<reachedPercentage>{String.format("%.2f", 
-                (session.reachedCount / all).asInstanceOf[Object])}</reachedPercentage>
+                (100.0 * session.reachedCount / all).asInstanceOf[Object])}</reachedPercentage>
 							<crashedPercentage>{String.format("%.2f", 
-                (session.crashedCount / all).asInstanceOf[Object])}</crashedPercentage>
+                (100.0 * session.crashedCount / all).asInstanceOf[Object])}</crashedPercentage>
 							<timedOutPercentage>{String.format("%.2f", 
-                (session.timedOutCount / all).asInstanceOf[Object])}</timedOutPercentage>
+                (100.0 * session.timedOutCount / all).asInstanceOf[Object])}</timedOutPercentage>
 							<quants>{quants map (x => <int>{x}</int>)}</quants>
-							<msPassed>{(new java.util.Date).getTime - startTime}</msPassed>
+							<secsPassed>{((new java.util.Date).getTime - startTime)/1000.0}</secsPassed>
 						</testCaseSummary>
-					xml.XML.saveFull(summary, summaryXML, false, null)
+					RobotXML.save(summaryFile.getPath, summaryXML)
 			  }
 			  cnt += 1
 			  i += 1
 			}
+      println(" and completed in " + ((new java.util.Date).getTime - startTime)/1000.0 + " secs.")
 		}
-    (new java.util.Date).getTime - globalStartTime 
+    val time = (new java.util.Date).getTime - globalStartTime
+    println("    --- Test case <" + suit + "." + set + "-" + num + " completed in " + time/1000.0 + " secs.")
+    time 
   }
 }

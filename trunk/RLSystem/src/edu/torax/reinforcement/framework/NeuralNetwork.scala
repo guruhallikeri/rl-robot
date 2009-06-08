@@ -96,7 +96,7 @@ object NeuralNetwork {
       case "logistic" => logistic
       case "logisticNeg" => logisticNeg
       case "tanh" => tanh
-      case _ => throw new Exception("Unknown type of activation function!")
+      case unknown => throw new Exception("Unknown type of activation function: " + unknown)
     }
   }
   

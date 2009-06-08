@@ -3,6 +3,7 @@ package edu.torax.reinforcement.framework
 abstract class GeneralFunction(val name: String) {
   def toXML: xml.Elem
   def apply(): Double
+  def makeCopy: GeneralFunction
 }
 
 object GeneralFunction {
@@ -23,6 +24,12 @@ case class LinearDecreasingFunction(min: Double, max: Double, timeRange: Int) ex
   def apply() = {
     itersDone += 1
     Math.max(min, min + (max-min)*(timeRange-itersDone)/timeRange)
+  }
+  
+  def makeCopy = {
+    val r = LinearDecreasingFunction(min, max, timeRange)
+    r.itersDone = this.itersDone
+    r
   }
   
   def toXML: xml.Elem = <generalFunction name={name} min={min.toString} max={max.toString} 

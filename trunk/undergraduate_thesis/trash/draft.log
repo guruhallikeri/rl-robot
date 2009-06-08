@@ -1,0 +1,258 @@
+This is pdfTeX, Version 3.1415926-1.40.8-alpha-20080323 (MiKTeX 2.7) (preloaded format=pdflatex 2009.1.16)  27 FEB 2009 12:30
+entering extended mode
+**draft.tex
+(draft.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8j> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman, ngerman, french, ukrainian, loaded.
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\article.cls"
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\size12.clo"
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\t2\mathtext.sty"
+Package: mathtext 1999/01/28 v1.0 transparent text-and-math defs
+LaTeX Info: Redefining \halign on input line 111.
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\inputenc.sty"
+Package: inputenc 2006/05/05 v1.1b Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\cyrillic\cp1251.def"
+File: cp1251.def 1999/11/16 v1.0d Input encoding file
+))
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\fontenc.sty"
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\cyrillic\t2aenc.def"
+File: t2aenc.def 2005/09/27 v1.0i Cyrillic encoding definition file
+\symT2Aletters=\mathgroup4
+)
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 100.
+
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\cyrillic\t2acmr.fd"
+File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
+))
+("C:\Program Files\MiKTeX 2.7\tex\generic\babel\babel.sty"
+Package: babel 2008/03/16 v3.8j The Babel package
+
+*************************************
+* Local config file bblopts.cfg used
+*
+("C:\Program Files\MiKTeX 2.7\tex\latex\00miktex\bblopts.cfg"
+File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
+)
+("C:\Program Files\MiKTeX 2.7\tex\generic\babel\english.ldf"
+Language: english 2005/03/30 v3.3o English support from the babel system
+
+("C:\Program Files\MiKTeX 2.7\tex\generic\babel\babel.def"
+File: babel.def 2008/03/16 v3.8j Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
+)
+\l@british = a dialect from \language\l@english 
+\l@UKenglish = a dialect from \language\l@english 
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+)
+("C:\Program Files\MiKTeX 2.7\tex\generic\babel\ukraineb.ldf"
+Language: ukraineb 2008/03/21 v1.1l Ukrainian support from the babel system
+Package babel Info: Making " an active character on input line 189.
+LaTeX Font Info:    Overwriting symbol font `T2Aletters' in version `bold'
+(Font)                  T2A/cmr/m/n --> T2A/cmr/bx/n on input line 273.
+LaTeX Font Info:    Overwriting math alphabet `\cyrmathsf' in version `bold'
+(Font)                  T2A/cmss/m/n --> T2A/cmss/bx/n on input line 273.
+LaTeX Font Info:    Overwriting math alphabet `\cyrmathit' in version `bold'
+(Font)                  T2A/cmr/m/it --> T2A/cmr/bx/it on input line 273.
+))
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks16
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsmath\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks17
+\ex@=\dimen104
+))
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen105
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\amsmath\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen106
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+\symOMLletters=\mathgroup7
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\symOMSletters=\mathgroup8
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks18
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks19
+\eqnshift@=\dimen107
+\alignsep@=\dimen108
+\tagshift@=\dimen109
+\tagwidth@=\dimen110
+\totwidth@=\dimen111
+\lineht@=\dimen112
+\@envbody=\toks20
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\stmaryrd\stmaryrd.sty"
+Package: stmaryrd 1994/03/03 St Mary's Road symbol package
+\symstmry=\mathgroup9
+LaTeX Font Info:    Overwriting symbol font `stmry' in version `bold'
+(Font)                  U/stmry/m/n --> U/stmry/b/n on input line 89.
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\tools\indentfirst.sty"
+Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\color.sty"
+Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\00miktex\color.cfg"
+File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
+)
+Package color Info: Driver file: pdftex.def on input line 130.
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\pdftex.def"
+File: pdftex.def 2007/06/12 v0.04h Graphics/color for pdfTeX
+\Gread@gobject=\count100
+))
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks22
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\graphics.sty"
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("C:\Program Files\MiKTeX 2.7\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: pdftex.def on input line 90.
+)
+\Gin@req@height=\dimen113
+\Gin@req@width=\dimen114
+) (draft.aux)
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 14.
+LaTeX Font Info:    ... okay on input line 14.
+
+("C:\Program Files\MiKTeX 2.7\tex\context\base\supp-pdf.tex"
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count101
+\scratchdimen=\dimen115
+\scratchbox=\box28
+\nofMPsegments=\count102
+\nofMParguments=\count103
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count104
+\MPscratchDim=\dimen116
+\MPnumerator=\count105
+\everyMPtoPDFconversion=\toks24
+) <agent_env_diagram.png, id=1, 1154.3125pt x 481.8pt>
+File: agent_env_diagram.png Graphic file (type png)
+
+<use agent_env_diagram.png>
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 31.
+
+("C:\Program Files\MiKTeX 2.7\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 31.
+ [1
+
+{C:/Documents and Settings/All Users/Application Data/MiKTeX/2.7/pdftex/config/
+pdftex.map} <agent_env_diagram.png (PNG copy)>]
+Overfull \hbox (17.30191pt too wide) in paragraph at lines 36--37
+\T2A/cmr/m/n/12 ком-про-мi-су мiж до-слi-дже-н-ням та ви-ко-ри-ста-н-ням на-бу-
+тих знань (\T2A/cmr/m/it/12 exploration-
+ []
+
+[2] (draft.aux) ) 
+Here is how much of TeX's memory you used:
+ 2794 strings out of 95311
+ 32152 string characters out of 1183476
+ 82542 words of memory out of 1500000
+ 5989 multiletter control sequences out of 110000
+ 5867 words of font info for 18 fonts, out of 1200000 for 2000
+ 14 hyphenation exceptions out of 8191
+ 27i,6n,32p,591b,260s stack positions out of 5000i,500n,10000p,200000b,5000s
+{C:/Program Files/MiKTeX 2.7/dvips/cm-super/cm-super-t2a.enc}<
+C:/Program Files/MiKTeX 2.7/fonts/type1/bluesky/cm/cmsy10.pfb><C:/Program Files
+/MiKTeX 2.7/fonts/type1/public/cm-super/sfrm1200.pfb><C:/Program Files/MiKTeX 2
+.7/fonts/type1/public/cm-super/sfti1200.pfb>
+Output written on draft.pdf (2 pages, 105293 bytes).
+PDF statistics:
+ 23 PDF objects out of 1000 (max. 8388607)
+ 0 named destinations out of 1000 (max. 131072)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
+

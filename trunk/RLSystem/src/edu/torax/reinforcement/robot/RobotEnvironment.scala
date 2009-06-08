@@ -5,8 +5,8 @@ import robot._
 
 object RobotEnvironment {
   private val actions: Array[RobotAction] = 
-    Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction)//,
-          //RobotTurnLeftAction,RobotTurnRightAction)
+    Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,
+          RobotTurnLeftAction,RobotTurnRightAction)
   val actionsCount = actions.size
 }
 

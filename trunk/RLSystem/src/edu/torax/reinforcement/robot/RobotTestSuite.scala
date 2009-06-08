@@ -12,6 +12,7 @@ class RobotTestSuite(elem: xml.NodeSeq, path: String) {
 	private var allTestsCount = 0
 	val testSets = (elem \ "testSet") map loadTestSet
 	println(name + " -- " + testSets.size + " test sets loaded with total " + allTestsCount + " tests.")
+	println("Tests in range [" + fromTest + "; " + toTest + "] will be run.")
 	
 	private def loadTestSet(elem: xml.NodeSeq) = {
 		val r = new RobotTestSet(elem, name, repeatEachTest, iterationsToDo, dumpEvery)
@@ -21,6 +22,7 @@ class RobotTestSuite(elem: xml.NodeSeq, path: String) {
 	}
   
 	def execute(): Long = {
+	  println("Starting executing test suit <" + name + ">, tests in range [" + fromTest +"; " + toTest + "].")
 		val startTime = (new java.util.Date).getTime
 
 		import java.io.File
@@ -54,7 +56,7 @@ class RobotTestSuite(elem: xml.NodeSeq, path: String) {
   
 		val time = (new java.util.Date).getTime - startTime
 		println(" -- Test suit <" + name + "> done in " + time/1000.0 +
-			"s with total amount of tests actually performed: " + testsDone + ".")
+			" secs with total amount of tests actually performed: " + testsDone + ".")
 			
 		val tmp = 
 			<testSuiteDone>
@@ -62,10 +64,11 @@ class RobotTestSuite(elem: xml.NodeSeq, path: String) {
 				<time>{time/1000.0}</time>
 				<testsDone>{testsDone}</testsDone>
 				<testsPassed>{testsPassed}</testsPassed>
+				{data}
 			</testSuiteDone>
 		
 		val file = new File(workDir, name + ".summary.xml")
-		xml.XML.saveFull(file.getPath, tmp, false, null)
+		RobotXML.save(file.getPath, tmp)
 		
 		time
 	}

@@ -1,0 +1,44 @@
+<testSuite name="real-test-suit" descr="Some really important benchmarks" 
+  repeatEachTest="10" iterationsToDo="1500000" dumpEvery="100000" 
+  fromTest="4" toTest="8">
+	<testSet name="structure-test-set">
+		<param type="double" name="maxDistanceToGoal" value="1.0"/>
+		
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.0" max="0.5" timeRange="300000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>20</int><int>14</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>13</int><int>8</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>7</int><int>4</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>3</int><int>2</int>
+		</param>
+	</testSet>
+	<testSet name="structure-test-set">
+		<param type="double" name="maxDistanceToGoal" value="1.0"/>
+		
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.0" max="0.5" timeRange="600000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>20</int><int>14</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>13</int><int>8</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>7</int><int>4</int>
+		</param>
+		<param type="array.int" name="nnStructure">
+			<int>3</int><int>2</int>
+		</param>
+	</testSet>
+</testSuite>

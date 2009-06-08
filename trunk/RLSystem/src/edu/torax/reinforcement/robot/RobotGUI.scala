@@ -145,7 +145,7 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
       val fc = new JFileChooser(".")
       
       if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-      	xml.XML.saveFull(fc.getSelectedFile().getName(), session.toXML, false, null)
+      	RobotXML.save(fc.getSelectedFile.getName, session.toXML)
       }
     }
   }

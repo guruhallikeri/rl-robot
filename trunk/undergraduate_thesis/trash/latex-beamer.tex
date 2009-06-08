@@ -1,0 +1,262 @@
+\documentclass{beamer}
+%\usepackage{beamerthemeBerkeley}
+% Use either the one above or the one below
+\usetheme{Berkeley}
+
+\title{LaTeX Beamer explained}
+\author{Jean-Etienne Poirrier}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\section[Outline]{}
+\frame{\tableofcontents}
+
+\section{Introduction}
+\subsection{Introduction to the LaTeX Beamer class}
+
+\frame
+{
+	\frametitle{What is LaTeX Beamer?}
+	
+	The beamer class is a LaTeX class that allows you to create a beamer presentation. It can also be used to create slides. It behaves similarly to other packages like Prosper, but has the advantage that it works together directly with pdflatex, but also with dvips.
+	Text describing the class in this presentation is taken from their website: \href{http://latex-beamer.sourceforge.net/}{http://latex-beamer.sourceforge.net/}.
+}
+
+\frame
+{
+	\frametitle{Basic steps to use it}
+
+	Once you have installed the beamer class~\footnote{It is already installed in my Fedora Core 4}, the basic steps to create a beamer presentation are the following:
+	
+	\begin{enumerate}
+	\item Specify beamer as document class instead of article.
+	\item Structure your LaTeX text using section and subsection commands.
+	\item Place the text of the individual slides inside \\frame commands.
+	\item Run pdflatex on the text (or latex and dvips).
+	\end{enumerate}
+}
+
+\frame
+{
+	\frametitle{Useful features}
+
+	The beamer class has several useful features:
+	
+	\begin{itemize}
+	\item You don't need any external programs to use it other than pdflatex, but it works also with dvips.
+	\item You can easily and intuitively create sophisticated overlays.
+	\item Finally, you can easily change the whole slide theme or only parts of it.
+	\end{itemize}
+}
+
+\frame
+{
+	\frametitle{Advantages}
+
+	The beamer class has several useful advantages:
+
+	\begin{itemize}
+	\item You only need a text editor and LaTeX to create a slideshow
+	\item You only need a PDF reader to show it~\footnote{they are nearly everywhere}
+	\item Your presentation is in a light text file (+ media if present)
+	\item There are plenty of themes readily available
+	\item Big letters~\footnote{you can of course apply any LaTeX cosmetic modification to your text} = less text = more easy to read / understand
+	\end{itemize}
+}
+
+\subsection{Competition}
+
+\frame
+{
+	\frametitle{Competitors}
+
+	Other solutions are competitors:
+
+	\begin{itemize}
+	\item magicpoint
+	\item LaTeX slide class
+	\item OpenOffice.org Impress
+	\end{itemize}
+}
+
+\frame
+{
+	\frametitle{Is MagicPoint better than LaTeX Beamer?}
+
+	This is a personal opinion. But, if you are fluent in LaTeX, you don't need to learn another markup language (like in MagicPoint). Direct export to HTML is an advantage for MagicPoint. Direct export to PDF is an advantage for LaTeX Beamer.
+}
+
+\frame
+{
+	\frametitle{Is LaTeX slide class better than the Beamer one?}
+
+	Again, it is a personal opinion. I don't know much about the slide class. Anyone here have an experience?
+}
+
+\frame
+{
+	\frametitle{Is OpenOffice.org Impress better than LaTeX Beamer?}
+
+	As usual, it is a personal opinion. If you need a WYSIWYG software, don't use LaTeX Beamer. If you computer isn't powerfull enough to handle OpenOffice.org, welcome to LaTeX Beamer!
+}
+
+\section{Examples}
+
+\frame
+{
+	\frametitle{Some examples}
+
+	In the next few slides, you'll find some examples showing that everything you can do with LaTeX, you can also do it with LaTeX Beamer.
+
+	I am not a specialist: I discovered Beamer a few hours ago. Other good example are available on the \href{http://latex-beamer.sourceforge.net/}{LaTeX Beamer homepage}~\footnote{as you can already see, you can easily add hyperlinks}.
+}
+
+\subsection{Common elements}
+
+\frame
+{
+	\frametitle{Include a table in your slideshow}
+	
+	\begin{table}
+	\centering
+	\begin{tabular}{|c|c|c|} \hline \hline
+	Restrained     & Swivel         & Telemetry      \\ \hline \hline
+	$\sim$ 400bpm  & $\sim$ 380bpm  & $\sim$ 310 bpm \\
+	$\sim$ 140mmHg & $\sim$ 120mmHg & $\sim$ 100mmHg \\ \hline \hline
+	\end{tabular}
+	\caption{Heart beat and blood pressure using different monitoring methods}
+	\label{tbl:kramer}
+	\end{table}
+}
+
+\frame
+{
+	\frametitle{Include a picture in your slideshow}
+	
+	\begin{figure}
+	\centering
+	\includegraphics[width=5cm]{sample_rate.png}
+	\caption{Our own test of downsampling}
+	\label{fig:test_down_sampling}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Include equations in your slideshow}
+
+	\[8 / 4 = \frac{8}{4} = 8 \cdot \frac{1}{4} = 8 \cdot 4^{-1}\]
+	
+	\[\left( \begin{array}{cc}
+	2 & 1 \\
+	0 & 1 \\
+	1 & 4 \\
+	\end{array} \right)\]
+}
+
+\subsection{Themes}
+
+\frame
+{
+	\frametitle{Themes}
+
+	You can use \textit{a lot} of themes already included in Beamer (see in /usr/share/texmf/tex/latex/beamer/beamertheme*.sty).
+
+	You've already seen the Berkeley theme. Some other examples will follow (even the first page is changing but it's up to you to try by yourself).
+}
+
+\frame
+{
+	\frametitle{Theme: Antibes}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-antibes.png}
+	\caption{Theme Antibes}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: bars}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-bars.png}
+	\caption{Theme bars}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: Bergen}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-bergen.png}
+	\caption{Theme Bergen}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: Berlin}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-berlin.png}
+	\caption{Theme Berlin}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: JuanLesPins}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-juanlespins.png}
+	\caption{Theme JuanLesPins}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: Madrid}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-madrid.png}
+	\caption{Theme Madrid}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: PaloAlto}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-paloalto.png}
+	\caption{Theme PaloAlto}
+	\end{figure}
+}
+
+\frame
+{
+	\frametitle{Theme: Singapore}
+	\begin{figure}
+	\centering
+	\includegraphics[width=8cm]{latex-beamer-singapore.png}
+	\caption{Theme Singapore}
+	\end{figure}
+}
+
+\section{About}
+
+\frame
+{
+	\frametitle{About the author of this slideshow}
+
+	Jean-Etienne Poirrier is a Ph.D. student in neuroscience at the \href{http://www.ulg.ac.be/}{University of Liege}, in Belgium. Here is my website (where you can find these slides and much more): \href{http://www.poirrier.be/~jean-etienne}{http://www.poirrier.be/~jean-etienne}.
+
+	For the ``About" section, you can obviously use the \\thanks-thing in the author field, in the beginning of the presentation. But I personaly don't find it pretty.
+}
+
+\end{document}
