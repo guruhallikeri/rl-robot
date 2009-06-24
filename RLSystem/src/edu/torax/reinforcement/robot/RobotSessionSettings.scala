@@ -24,7 +24,7 @@ object RobotSessionSettings {
 	  val nnInitializer: NeuralNetwork.Initializer = NeuralNetwork.ConstantInitializer(0.0)
 	
 	  // Actor Settings
-	  val epsFunction: GeneralFunction = LinearDecreasingFunction(0.00, 0.5, 300000)
+	  val epsFunction: GeneralFunction = LinearDecreasingFunction(0.01, 0.5, 300000)
 	 
 	  // Statistics Settings
 	  val lastMax: Int = 5000			// how much last episodes to use for statistics

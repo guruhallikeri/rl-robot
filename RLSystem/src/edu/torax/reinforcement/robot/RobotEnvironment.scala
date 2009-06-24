@@ -8,6 +8,11 @@ object RobotEnvironment {
     Array(RobotForwardAction,RobotLeftForwardAction,RobotRightForwardAction,
           RobotTurnLeftAction,RobotTurnRightAction)
   val actionsCount = actions.size
+  
+//  private var minDst = 3.0
+//  private var maxDst = 50.0
+//  private var timeRange = 300000
+//  private var iterNumber = 0
 }
 
 class RobotEnvironment (
@@ -80,7 +85,7 @@ class RobotEnvironment (
       //println("Episode timed out!")
       -0.7 + 0.5*Math.exp(-2.0*curState.goalDistance/width)
     } else { 
-      -0.01
+      -0.005
     }
   }
   
@@ -119,11 +124,14 @@ class RobotEnvironment (
     import settings._
     
  		val goal = Vector(obsGap + Math.random*(width - 2*obsGap), obsGap + Math.random*(height - 2*obsGap))
- 		val dst = Math.min((Double.PositiveInfinity /: obstacles) {(d, obs) => d min (obs distanceTo goal) },
-                      Polygon.distanceBetween(model.boundBox, goal))
- 		if (dst < maxDistanceToObs) {
+ 		val obsDst = (Double.PositiveInfinity /: obstacles) {(d, obs) => d min (obs distanceTo goal) }
+    val modelDst = Polygon.distanceBetween(model.boundBox, goal)
+//    import RobotEnvironment._
+//    val shapingDst = minDst + iterNumber * maxDst / timeRange
+ 		if (Math.min(obsDst, modelDst) < maxDistanceToObs /*|| modelDst > shapingDst*/ ) {
  			generateGoal
  		} else {
+// 		  RobotEnvironment.iterNumber += 1
  			goal
  		}
   }

@@ -21,7 +21,8 @@ class RobotEnvironmentVisualizer extends Component {
 		val offx = 5
     val offy = 5
     
-    g.setColor(getBackground)
+    g.setColor(new Color(251, 250, 250))
+//    g.setColor(getBackground)
     g.fillRect(0, 0, size.width, size.height)
     
     val wid = size.width - 2*offx
@@ -41,7 +42,7 @@ class RobotEnvironmentVisualizer extends Component {
       def transY(v: Vector) = hei + offy - (v.y * yCoef).toInt
       
       // draw obstcales
-      g.setColor(Color.GRAY)
+      g.setColor(Color.gray)
 	    
       for (obs <- environment.obstacles) {
       	obs match {
@@ -63,7 +64,7 @@ class RobotEnvironmentVisualizer extends Component {
       if (!session.inScreenshotMode) {
 	      //draw vision sectors
 	      val sectorAngle = environment.visionAngle / RobotState.visionSectorsNumber
-	      g.setColor(Color.white)
+	      g.setColor(Color.blue)
 	      g.setStroke(new BasicStroke(0.5f))
 	      for (i <- 0 until RobotState.visionSectorsNumber) {
 	        val p1 = RobotState.sectorStart(i, model)//model.position //+ model.direction*(model.height/2.0)

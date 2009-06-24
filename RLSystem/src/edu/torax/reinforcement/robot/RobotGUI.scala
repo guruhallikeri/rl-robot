@@ -55,8 +55,8 @@ class RobotGUI extends JFrame("Robot Control (c) Andrii Nakryiko") {
 	    println("Env state: " + env.state)
 	    println("Env goal: " + env.goal)
      
-	    println("")
-	    println(new xml.PrettyPrinter(80, 2).format(session.toXML))
+//	    println("")
+//	    println(new xml.PrettyPrinter(80, 2).format(session.toXML))
     }
   }
 

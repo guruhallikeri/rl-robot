@@ -1,0 +1,21 @@
+<testSuite name="simple-test-suit4" descr="" 
+  repeatEachTest="10" iterationsToDo="1500000" dumpEvery="100000" 
+  fromTest="2" toTest="2">
+	<testSet name="single-set4">
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.5" timeRange="500000"/>
+		</param>
+
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="1" timeRange="1200000"/>
+		</param>
+
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.3" timeRange="1200000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>12</int><int>7</int>
+		</param>
+	</testSet>
+</testSuite>

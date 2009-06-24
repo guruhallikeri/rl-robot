@@ -1,6 +1,6 @@
 package edu.torax.reinforcement.framework
 
-abstract class SarsaActor[A <: Action, S <: State] (
+abstract class QActor[A <: Action, S <: State] (
   valueFunction: ValueFunction[A,S],
   val gamma: Double,
   listener: Actor.Event => Unit
@@ -11,11 +11,13 @@ abstract class SarsaActor[A <: Action, S <: State] (
     val state = environment.state
     val (action, actVal) = chooseAction(state, learning)
     val (newState, reward) = environment.doAction(action)
-    val (newAction, newActionValue) = chooseAction(newState, false)
+    
+    var maxNextReward = Double.NegativeInfinity
+    for (i <- 0 until environment.actionsCount) {
+      maxNextReward = maxNextReward max valueFunction(newState, environment.prepareAction(i))
+    }
     if (learning) {
-      val wanted = reward + gamma * newActionValue
-//      val wanted = actVal*0.7 + 0.3*(reward + gamma * newActionValue)
-      //println(wanted + " -=-=-=-=-=-=- ")
+      val wanted = reward + gamma * maxNextReward
       valueFunction.update(state, action, wanted)
     }
     !environment.isTerminated

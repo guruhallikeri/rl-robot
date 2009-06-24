@@ -9,7 +9,9 @@ abstract class Actor[A <: Action, S <: State] (
   private def environment_=(environ: Environment[A,S]) { env = environ }
   
   protected def processStep(): Boolean	// returns false if we reached terminal state
-  protected def prepareEpisode(): Unit
+  protected def prepareEpisode(): Unit = {
+    valueFunction.beginEpisode()
+  }
   
   protected def chooseAction(state: S, inLearning: Boolean): (A, Double)
   
