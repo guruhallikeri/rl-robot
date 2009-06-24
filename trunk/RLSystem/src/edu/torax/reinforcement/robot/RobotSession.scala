@@ -32,6 +32,8 @@ class RobotSession (val settings: RobotSessionSettings, messageProcessor: (frame
   
   def createActor = {
     //recreateEnvironment()
+//    val a = new SarsaActor(vfunc, settings.gamma, (x => ())) 
+//  														with EpsGreedyPolicy[RobotAction,RobotState] { val eps = settings.epsFunction }
     val a = new SarsaActor(vfunc, settings.gamma, (x => ())) 
   														with EpsGreedyPolicy[RobotAction,RobotState] { val eps = settings.epsFunction }
     a.beginEpisode(env, true)

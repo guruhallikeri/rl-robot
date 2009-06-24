@@ -38,8 +38,10 @@ case class RobotState(env: RobotEnvironment) extends State {
 		
 		(ranges flatMap (x => encoder(x, coarseRangeSensorN, coarseRangeSensorR))) ::: 
 		encoder(goalDist, coarseGoalDistanceN, coarseGoalDistanceR) :::
-		encoder(Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) :::
-		encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)
+//		encoder(Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) :::
+//		encoder(goalAngle - Math.Pi, coarseGoalAngleN, coarseGoalAngleR)
+		encoder(2*Math.Pi - goalAngle, coarseGoalAngleN, coarseGoalAngleR) :::
+		encoder(goalAngle, coarseGoalAngleN, coarseGoalAngleR)
 //				(ranges map (x => Math.min(x / coarseRangeSensorR, 1.0))) ::: 
 //        List(Math.min(goalDist/coarseGoalDistanceR, 1.0), goalAngle/2.0/Math.Pi)
 	}  
