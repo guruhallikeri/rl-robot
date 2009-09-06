@@ -1,0 +1,398 @@
+This is pdfTeX, Version 3.141592-1.40.4 (MiKTeX 2.6) (preloaded format=latex 2008.5.15)  20 MAY 2008 23:48
+entering extended mode
+**main.tex
+(main.tex
+LaTeX2e <2005/12/01>
+Babel <v3.8h> and hyphenation patterns for english, dumylang, nohyphenation, ge
+rman, ngerman, french, ukrainian, loaded.
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\article.cls"
+Document Class: article 2005/09/16 v1.4f Standard LaTeX document class
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\size12.clo"
+File: size12.clo 2005/09/16 v1.4f Standard LaTeX file (size option)
+)
+\c@part=\count79
+\c@section=\count80
+\c@subsection=\count81
+\c@subsubsection=\count82
+\c@paragraph=\count83
+\c@subparagraph=\count84
+\c@figure=\count85
+\c@table=\count86
+\abovecaptionskip=\skip41
+\belowcaptionskip=\skip42
+\bibindent=\dimen102
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\t2\mathtext.sty"
+Package: mathtext 1999/01/28 v1.0 transparent text-and-math defs
+LaTeX Info: Redefining \halign on input line 111.
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\inputenc.sty"
+Package: inputenc 2006/05/05 v1.1b Input encoding file
+\inpenc@prehook=\toks14
+\inpenc@posthook=\toks15
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\cyrillic\cp1251.def"
+File: cp1251.def 1999/11/16 v1.0d Input encoding file
+))
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\fontenc.sty"
+Package: fontenc 2005/09/27 v1.99g Standard LaTeX package
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\cyrillic\t2aenc.def"
+File: t2aenc.def 2005/09/27 v1.0i Cyrillic encoding definition file
+\symT2Aletters=\mathgroup4
+)
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 100.
+
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\cyrillic\t2acmr.fd"
+File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
+))
+("d:\Program Files\MiKTeX 2.6\tex\generic\babel\babel.sty"
+Package: babel 2005/11/23 v3.8h The Babel package
+
+*************************************
+* Local config file bblopts.cfg used
+*
+("d:\Program Files\MiKTeX 2.6\tex\latex\00miktex\bblopts.cfg"
+File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
+)
+("d:\Program Files\MiKTeX 2.6\tex\generic\babel\english.ldf"
+Language: english 2005/03/30 v3.3o English support from the babel system
+
+("d:\Program Files\MiKTeX 2.6\tex\generic\babel\babel.def"
+File: babel.def 2005/11/23 v3.8h Babel common definitions
+\babel@savecnt=\count87
+\U@D=\dimen103
+)
+\l@british = a dialect from \language\l@english 
+\l@UKenglish = a dialect from \language\l@english 
+\l@canadian = a dialect from \language\l@american 
+\l@australian = a dialect from \language\l@british 
+\l@newzealand = a dialect from \language\l@british 
+)
+("d:\Program Files\MiKTeX 2.6\tex\generic\babel\ukraineb.ldf"
+Language: ukraineb 2007/10/20 v1.1l Ukrainian support from the babel system
+Package babel Info: Making " an active character on input line 189.
+LaTeX Font Info:    Overwriting symbol font `T2Aletters' in version `bold'
+(Font)                  T2A/cmr/m/n --> T2A/cmr/bx/n on input line 273.
+LaTeX Font Info:    Overwriting math alphabet `\cyrmathsf' in version `bold'
+(Font)                  T2A/cmss/m/n --> T2A/cmss/bx/n on input line 273.
+LaTeX Font Info:    Overwriting math alphabet `\cyrmathit' in version `bold'
+(Font)                  T2A/cmr/m/it --> T2A/cmr/bx/it on input line 273.
+))
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsfonts\amsfonts.sty"
+Package: amsfonts 2001/10/25 v2.2f
+\@emptytoks=\toks16
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 132.
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsmath\amsmath.sty"
+Package: amsmath 2000/07/18 v2.13 AMS math features
+\@mathmargin=\skip43
+
+For additional information on amsmath, use the `?' option.
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsmath\amstext.sty"
+Package: amstext 2000/06/29 v2.01
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsmath\amsgen.sty"
+File: amsgen.sty 1999/11/30 v2.0
+\@emptytoks=\toks17
+\ex@=\dimen104
+))
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsmath\amsbsy.sty"
+Package: amsbsy 1999/11/29 v1.2d
+\pmbraise@=\dimen105
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsmath\amsopn.sty"
+Package: amsopn 1999/12/14 v2.01 operator names
+)
+\inf@bad=\count88
+LaTeX Info: Redefining \frac on input line 211.
+\uproot@=\count89
+\leftroot@=\count90
+LaTeX Info: Redefining \overline on input line 307.
+\classnum@=\count91
+\DOTSCASE@=\count92
+LaTeX Info: Redefining \ldots on input line 379.
+LaTeX Info: Redefining \dots on input line 382.
+LaTeX Info: Redefining \cdots on input line 467.
+\Mathstrutbox@=\box26
+\strutbox@=\box27
+\big@size=\dimen106
+LaTeX Font Info:    Redeclaring font encoding OML on input line 567.
+\symOMLletters=\mathgroup7
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 568.
+\symOMSletters=\mathgroup8
+\macc@depth=\count93
+\c@MaxMatrixCols=\count94
+\dotsspace@=\muskip10
+\c@parentequation=\count95
+\dspbrk@lvl=\count96
+\tag@help=\toks18
+\row@=\count97
+\column@=\count98
+\maxfields@=\count99
+\andhelp@=\toks19
+\eqnshift@=\dimen107
+\alignsep@=\dimen108
+\tagshift@=\dimen109
+\tagwidth@=\dimen110
+\totwidth@=\dimen111
+\lineht@=\dimen112
+\@envbody=\toks20
+\multlinegap=\skip44
+\multlinetaggap=\skip45
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2666.
+LaTeX Info: Redefining \] on input line 2667.
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\graphics\graphicx.sty"
+Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\graphics\keyval.sty"
+Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
+\KV@toks@=\toks22
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\graphics\graphics.sty"
+Package: graphics 2006/02/20 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\graphics\trig.sty"
+Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\00miktex\graphics.cfg"
+File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
+)
+Package graphics Info: Driver file: dvips.def on input line 90.
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\graphics\dvips.def"
+File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
+))
+\Gin@req@height=\dimen113
+\Gin@req@width=\dimen114
+)
+("d:\Program Files\MiKTeX 2.6\tex\latex\tools\indentfirst.sty"
+Package: indentfirst 1995/11/23 v1.03 Indent first paragraph (DPC)
+) (main.aux
+(title.aux) (introduction.aux) (task.aux) (control_theory.aux) (neuralnets.aux)
+(project_structure.aux) (physics.aux) (opengl.aux) (realization_details.aux)
+(conclusions.aux) (literature.aux))
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 27.
+LaTeX Font Info:    ... okay on input line 27.
+ (title.tex) [1
+
+
+] (main.toc
+LaTeX Font Info:    Try loading font information for U+msa on input line 7.
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsfonts\umsa.fd"
+File: umsa.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 7.
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\amsfonts\umsb.fd"
+File: umsb.fd 2002/01/19 v2.2g AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for OML+cmr on input line 7.
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\omlcmr.fd"
+File: omlcmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <14.4> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 7.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <10> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 7.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <7> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 7.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 7.
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\base\omscmr.fd"
+File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <14.4> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <7> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
+)
+\tf@toc=\write3
+ [2
+
+] (introduction.tex [3
+
+]) [4] (task.tex) [5
+
+
+] [6] (control_theory.tex
+File: feedback_loop.eps Graphic file (type eps)
+ <feedback_loop.eps>) [7
+
+
+]
+[8] (neuralnets.tex
+Overfull \hbox (16.72057pt too wide) in paragraph at lines 9--10
+[][]\T2A/cmr/m/n/14.4 Поняття роз-ви-тку ней-ро-нiв по-в'я-за-не з по-ня-т-тям 
+\T2A/cmr/m/it/14.4 пла-сти-чно-стi (plasti-
+ []
+
+[9
+
+
+]
+Overfull \hbox (0.9624pt too wide) in paragraph at lines 17--17
+\T2A/cmr/m/it/14.4 на-да-ють Ёх для подаль-шоЁ оброб-ки. Ней-ро-ме-ре-жа схо-жа
+ з моз-
+ []
+
+[10]
+Overfull \hbox (3.19714pt too wide) in paragraph at lines 29--30
+[][]\T2A/cmr/m/it/14.4 Адаптивнiсть (adapti-vi-ty)\T2A/cmr/m/n/14.4 . Ней-ро-ме
+-ре-жi ма-ють вла-сти-вiсть \T2A/cmr/m/it/14.4 ада-пто-
+ []
+
+[11]
+File: neuron_model.eps Graphic file (type eps)
+ <neuron_model.eps> [12]
+Overfull \hbox (6.74983pt too wide) in paragraph at lines 63--65
+[]\T2A/cmr/m/n/14.4 де $\OML/cmm/m/it/14.4 x[]; x[]; [] ; x[]$ \T2A/cmr/m/n/14.
+4  вхi-днi си-гна-ли; $\OML/cmm/m/it/14.4 w[]; w[]; [] ; w[]$ \T2A/cmr/m/n/14.
+4  си-на-пти-чнi ва-ги ней-
+ []
+
+[13]
+File: function_types.eps Graphic file (type eps)
+ <function_types.eps>
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 72.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <8> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 72.
+LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <6> not available
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 72.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 72.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 72.
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <6> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 72.
+
+Overfull \hbox (1.1592pt too wide) in paragraph at lines 75--76
+[][]\T2A/cmr/m/it/14.4 Фукнцiя оди-ни-чно-го стриб-ка \T2A/cmr/m/n/14.4 або по-
+ро-го-ва фун-кцiя (threshold functi-
+ []
+
+[14] [15] [16]
+File: multilayer_perceptron.eps Graphic file (type eps)
+ <multilayer_perceptron.eps> [17] [18]
+Overfull \hbox (0.27348pt too wide) in paragraph at lines 153--154
+[][]\T2A/cmr/m/it/14.4 Зворотнiй про-хiд (backward computati-on)\T2A/cmr/m/n/14
+.4 . Об-чи-слю-№-мо ло-каль-нi гра-
+ []
+
+) [19] (project_structure.tex
+File: interaction_diagram.eps Graphic file (type eps)
+ <interaction_diagram.eps>
+Overfull \hbox (17.25615pt too wide) in paragraph at lines 4--10
+[][]\T2A/cmr/m/n/14.4 Структурно про-грам-ний про-ект ре-а-лi-зо-ва-но як на-бi
+р основ-них [],
+ []
+
+) [20
+
+
+] (physics.tex
+Underfull \hbox (badness 10000) in paragraph at lines 7--9
+
+ []
+
+[21
+
+
+]
+File: carphysics.eps Graphic file (type eps)
+ <carphysics.eps>
+Underfull \hbox (badness 10000) in paragraph at lines 57--63
+
+ []
+
+[22]) [23] (opengl.tex [24
+
+
+]
+LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 43.
+
+
+("d:\Program Files\MiKTeX 2.6\tex\latex\cyrillic\t2acmtt.fd"
+File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
+))
+Underfull \hbox (badness 10000) in paragraph at lines 72--49
+
+ []
+
+[25] [26] (realization_details.tex
+File: nnet_conf.eps Graphic file (type eps)
+ <nnet_conf.eps>
+File: visible_range.eps Graphic file (type eps)
+ <visible_range.eps> [27
+
+
+]
+Overfull \hbox (2.59596pt too wide) in paragraph at lines 35--36
+\T2A/cmr/m/n/14.4 мен-ша, нiж по-то-чне зна-че-н-ня мi-нi-маль-ноЁ вiд-ста-нi $
+\OML/cmm/m/it/14.4 MinDistance$ \T2A/cmr/m/n/14.4 (яке
+ []
+
+[28] [29]
+File: stuck.eps Graphic file (type eps)
+ <stuck.eps> [30] [31] [32]) [33] (conclusions.tex
+File: screenshot.eps Graphic file (type eps)
+ <screenshot.eps>
+[34
+
+
+]) [35] (literature.tex
+Underfull \hbox (badness 10000) in paragraph at lines 6--7
+[][]\T2A/cmr/m/n/14.4 Philippe Kunzle. Vehi-cle Control wi-th Neural Networks 
+
+ []
+
+
+Overfull \hbox (21.34584pt too wide) in paragraph at lines 7--8
+[][]\T2A/cmr/m/n/14.4 Wikipedia. Control Theory  http://en.wikipedia.org/wiki/
+Control_theory 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 10--11
+[][]\T2A/cmr/m/n/14.4 Gamedev.ru. Фи-зи-ка ав-то-мо-би-ля для игр 
+ []
+
+) [36
+
+
+] (main.aux (title.aux) (introduction.aux) (task.aux) (control_theory.aux) (neu
+ralnets.aux) (project_structure.aux) (physics.aux) (opengl.aux)
+(realization_details.aux) (conclusions.aux) (literature.aux)) ) 
+Here is how much of TeX's memory you used:
+ 2809 strings out of 95263
+ 31063 string characters out of 1184288
+ 85607 words of memory out of 1076715
+ 5598 multiletter control sequences out of 60000
+ 26473 words of font info for 67 fonts, out of 1000000 for 2000
+ 14 hyphenation exceptions out of 8191
+ 30i,14n,32p,1757b,306s stack positions out of 5000i,500n,10000p,200000b,32768s
+
+Output written on main.dvi (36 pages, 124984 bytes).

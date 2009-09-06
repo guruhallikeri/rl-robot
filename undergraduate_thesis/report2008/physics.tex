@@ -1,0 +1,72 @@
+\subsection{Фізика автомобіля}
+\subsubsection{Фізика руху по прямій}
+
+Спочатку розглянемо автомобіль, що рухається по прямій. Перш за все, на нього діє сили тяги:
+\begin{equation} 
+	\vec F_{traction}  = \vec u \cdotp EngineForce,
+\end{equation}
+де $\vec u$ "--- одиничний вектор напряму руху авто.\\
+
+Далі введемо сили опору. Перша і найбільш важлива "--- сила опору повітря, іншими словами "--- аеродинамічна сила опору. Ця сила пропорційна квадрату швидкості:
+\begin{equation}
+	\vec F_{drag} = -C_{drag} \cdotp \vec{v} \cdotp |\vec{v}|,
+\end{equation}
+де $C_{drag}$ "--- константа, $\vec v$ "--- вектор швидкості.
+
+Також ще є сила тертя:
+\begin{equation}
+	\vec F_{rr}  = -C_{rr} \cdotp \vec v,
+\end{equation}
+де $C_{rr}$ "--- константа, $\vec v$ "--- вектор швидкості.
+
+При малих швидкостях сила тертя є основною силою опору,при високих швидкостях $\vec F_{drag}$ перевищує по значенню $\vec F_{rr}$.
+
+Загальна сила "--- це векторна сума цих трьох сил.
+\begin{equation} 
+	\vec F_{long} = \vec F_{traction} + \vec F_{drag} + \vec F_{rr}.
+\end{equation}
+
+Прискорення визначається рівнодійною силою, що діє на авто (в Нютонах), і його масою:
+\begin{equation} 
+	\vec a = \frac{\vec F}{M}.
+\end{equation}
+
+Швидкість автомобіля (в метрах на секунду) визначається як інтеграл прискорення через деякий час $dt$:
+\begin{equation} 
+	\vec v = \vec v + dt \cdotp \vec a.
+\end{equation}
+
+В свою чергу, позиція автомобіля визначається за формулою:
+\begin{equation} 
+	\vec p = \vec p + dt \cdotp \vec v.
+\end{equation}
+
+\subsubsection{Гальмування}
+При гальмуванні сила тяги замінюється на силу гальмування, направлену в протилежному напрямку:
+\begin{equation} 
+	\vec F_{long} = \vec F_{braking} + \vec F_{drag} + \vec F_{rr},
+\end{equation}
+\begin{equation}
+	\vec F_{braking}  = -\vec u \cdotp C_{braking}.
+\end{equation}
+
+\subsubsection{Рух по кривій}
+
+Моделювання фізики поворотів на малих швидкостях відрізняється від моделювання на високих. При малій швидкості колеса рухаються в тому напрямі в якому вони показують.
+
+На рис.~\ref{carphysics} зображено радіус кола повороту цілого авто.
+\begin{figure}[!bt] \begin{center}
+\includegraphics[width=0.8\textwidth]{carphysics.eps}
+\caption{Радіус кола повороту} \label{carphysics}
+\end{center} \end{figure}
+$L$ "--- віддаль між передньою та задньою віссю, $R$ "--- радіус кола, яке описує авто.\\
+
+Кут $\delta$ можна вирахувати за формулою:
+\begin{equation}
+	\sin{\delta} = \frac{L}{R} \Leftrightarrow R = \frac{L}{\sin{\delta}}.
+\end{equation}
+
+Якщо кут повороту рівний 0, то радіус кола рівний $\infty$, тобто ми автомобіль починає рухатись по прямій. Наступним кроком буде розрахунок кутової швидкості за формулою:
+\begin{equation}
+	\omega = \frac{v}{R}.
+\end{equation}
