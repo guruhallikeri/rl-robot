@@ -1,0 +1,20 @@
+<testSuite name="changed-state-suit" descr="Sample Test Suite" 
+  repeatEachTest="5" iterationsToDo="5000" dumpEvery="1000" 
+  fromTest="1" toTest="200">
+	<testSet name="ch-state1">
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.001" max="0.5" timeRange="400000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.3" timeRange="1300000"/>
+		</param>
+	</testSet>
+	<testSet name="ch-state2">
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.001" max="0.5" timeRange="300000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.3" timeRange="1000000"/>
+		</param>
+	</testSet>
+</testSuite>

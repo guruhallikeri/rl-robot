@@ -12,7 +12,6 @@ object SchedulerLauncher {
       }  
     }
     
-    
     for (i <- 1 to maxT) {
       sch ! NewTask(Task(i, 200 + (Math.random*500).toInt))
     }

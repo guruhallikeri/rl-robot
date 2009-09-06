@@ -9,7 +9,7 @@ import gutils._
 
 object RobotLauncher {
   def main(args : Array[String]) : Unit = {
-    if (args.size == 0) {
+    if (args.size != 0) {
 	    SwingUtilities.invokeLater(new Runnable {
 	      def run {
 	    	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -27,7 +27,7 @@ object RobotLauncher {
 //        maxThreads = args(0).substring(12).toInt
 //      }
       //val testSuites = (args drop dropCnt) map (x => new RobotTestSuite(xml.XML.loadFile(x), "testbed"))
-      val testSuites = Array(new RobotTestSuite(xml.XML.loadFile("""exper_changed_state.xml"""), "testbed"))
+      val testSuites = Array(new RobotTestSuite(xml.XML.loadFile("""exper_changed_state2.xml"""), "testbed2"))
       for (testSuite <- testSuites) {
         testSuite.execute()
       }
