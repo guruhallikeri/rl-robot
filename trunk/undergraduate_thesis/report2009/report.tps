@@ -3,9 +3,9 @@ Type=TeXnicCenterProjectSessionInformation
 Version=2
 
 [SessionInfo]
-ActiveTab=0
-FrameCount=2
-ActiveFrame=1
+ActiveTab=2
+FrameCount=3
+ActiveFrame=2
 
 [Frame0]
 Columns=1
@@ -39,8 +39,8 @@ TopSubLine=8
 [Frame1]
 Columns=1
 Rows=1
-Flags=2
-ShowCmd=3
+Flags=0
+ShowCmd=1
 MinPos.x=-1
 MinPos.y=-1
 MaxPos.x=-4
@@ -53,15 +53,44 @@ Class=CLatexEdit
 Document=report.tex
 
 [Frame1_Row0]
-cyCur=369
+cyCur=232
 cyMin=10
 
 [Frame1_Col0]
-cxCur=1054
+cxCur=936
 cxMin=10
 
 [Frame1_View0,0]
 Cursor.row=0
 Cursor.column=0
+TopSubLine=0
+
+[Frame2]
+Columns=1
+Rows=1
+Flags=2
+ShowCmd=3
+MinPos.x=-1
+MinPos.y=-1
+MaxPos.x=-4
+MaxPos.y=-23
+NormalPos.left=44
+NormalPos.top=44
+NormalPos.right=1008
+NormalPos.bottom=323
+Class=CLatexEdit
+Document=task.tex
+
+[Frame2_Row0]
+cyCur=369
+cyMin=10
+
+[Frame2_Col0]
+cxCur=1054
+cxMin=10
+
+[Frame2_View0,0]
+Cursor.row=5
+Cursor.column=376
 TopSubLine=0
 
