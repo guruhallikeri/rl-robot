@@ -3,3 +3,13 @@
 = Reinforcement learning article TODO =
 
 to be filled... I hope :)
+
+== Benchmarks ==
+
+  * Compare effectiveness of learning and navigating in case of different number of vision sectors:
+    * 3;
+    * 5;
+    * 7;
+  * Compare different sector placements:
+    * usual (from one point): central, back, front;
+    * sparse (starting points of sectors are uniformly located along some line): back, front;
