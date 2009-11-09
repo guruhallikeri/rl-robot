@@ -13,3 +13,8 @@ to be filled... I hope :)
   * Compare different sector placements:
     * usual (from one point): central, back, front;
     * sparse (starting points of sectors are uniformly located along some line): back, front;
+  * Compare different descending functions (for neural network teaching, eps-functions for exploration, etc):
+    * constant;
+    * linear-descending;
+    * exponential-descending;
+    * exponential-descending with (random?) peaks;
