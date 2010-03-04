@@ -1,0 +1,16 @@
+// nn-architecture 10-6
+// step-size-function exponential   
+// eps-function exponentialSpikes
+
+#all
+plot "10-5.txt" using 1:2 with lines, "10-5.txt" using 1:3 with lines, "10-5.txt" using 1:4 with lines,"10-5.txt" using 1:5 with lines, "10-5.txt" using 1:6 with lines, "10-5.txt"using 1:7 with lines,"10-5.txt" using 1:8 with lines, "10-5.txt" using 1:9 with lines, "10-5.txt" using 1:10 with lines,"10-5.txt" using 1:11 with lines, "10-5.txt" using 1:12 with lines, "10-5.txt" using 1:13 with lines
+
+#just reaches
+plot "10-5.txt" using 1:2 with lines, "10-5.txt" using 1:5 with lines, "10-5.txt" using 1:8 with lines, "10-5.txt" using 1:11 with lines
+
+#just crashes
+plot "10-5.txt" using 1:3 with lines, "10-5.txt" using 1:6 with lines, "10-5.txt" using 1:9 with lines, "10-5.txt" using 1:12 with lines
+
+#just timeouts
+plot "10-5.txt" using 1:4 with lines, "10-5.txt" using 1:7 with lines, "10-5.txt" using 1:10 with lines, "10-5.txt" using 1:13 with lines
+

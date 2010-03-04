@@ -1,0 +1,50 @@
+<testSuite name="suit-different-funcs" descr="Suite to test different functions" 
+  repeatEachTest="3" iterationsToDo="1200000" dumpEvery="100000" 
+  fromTest="6" toTest="1000000000">
+	<testSet name="setNN10-6">
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.0" max="0.3" timeRange="300000"/>
+		</param>
+
+		<param type="function" name="epsFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.3" endValue="0.01" spikesCnt="3" timeRange="300000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>10</int><int>6</int>
+		</param>
+		
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.4" timeRange="600000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponential" startValue="0.4" endValue="0.01" timeRange="600000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.4" endValue="0.01" spikesCnt="3" timeRange="600000"/>
+		</param>
+	</testSet>
+	<testSet name="setNN7-4">
+		<param type="function" name="epsFunction">
+			<generalFunction name="linearDecreasing" min="0.0" max="0.3" timeRange="300000"/>
+		</param>
+
+		<param type="function" name="epsFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.3" endValue="0.01" spikesCnt="3" timeRange="300000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>7</int><int>4</int>
+		</param>
+		
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="linearDecreasing" min="0.01" max="0.4" timeRange="600000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponential" startValue="0.4" endValue="0.01" timeRange="600000"/>
+		</param>
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.4" endValue="0.01" spikesCnt="3" timeRange="600000"/>
+		</param>
+	</testSet>
+</testSuite>
