@@ -1,0 +1,30 @@
+<testSuite name="suit-2009-12-24_s_s" descr="Suite to test different functions" 
+  repeatEachTest="5" iterationsToDo="1400000" dumpEvery="50000" 
+  fromTest="1" toTest="1000000000">
+	<testSet name="5-3_s3">
+		<param type="function" name="epsFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.3" endValue="0.01" spikesCnt="3" timeRange="300000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>5</int><int>3</int>
+		</param>
+		
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.4" endValue="0.01" spikesCnt="3" timeRange="600000"/>
+		</param>
+	</testSet>
+	<testSet name="5-3_s5">
+		<param type="function" name="epsFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.3" endValue="0.01" spikesCnt="5" timeRange="300000"/>
+		</param>
+		
+		<param type="array.int" name="nnStructure">
+			<int>5</int><int>3</int>
+		</param>
+		
+		<param type="function" name="stepSizeFunction">
+			<generalFunction name="exponentialSpikes" startValue="0.4" endValue="0.01" spikesCnt="5" timeRange="6000000"/>
+		</param>
+	</testSet>
+</testSuite>

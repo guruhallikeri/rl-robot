@@ -1,0 +1,112 @@
+set xlabel "Iterations"
+set ylabel "%"
+
+set terminal png
+
+################################################################################
+set output "7-4-spikes-spikes.png"
+#all
+plot [100000:1200000][0:100] "7-2.txt" u 1:2 title "7x4 spikes spikes" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-spikes-spikes_r.png"
+plot [100000:1200000][0:100] "7-2.txt" u 1:2 title "7x4 spikes spikes [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-spikes-spikes_c.png"
+plot [100000:1200000][0:100] "7-2.txt" u 1:3 title "7x4 spikes spikes [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-spikes-spikes_t.png"
+plot [100000:1200000][0:100] "7-2.txt" u 1:4 title "7x4 spikes spikes [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
+
+################################################################################
+set output "7-4-spikes-linear.png"
+#all
+plot [100000:1200000][0:100] "7-1.txt" u 1:2 title "7x4 spikes linear" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-spikes-linear_r.png"
+plot [100000:1200000][0:100] "7-1.txt" u 1:2 title "7x4 spikes linear [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-spikes-linear_c.png"
+plot [100000:1200000][0:100] "7-1.txt" u 1:3 title "7x4 spikes linear [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-spikes-linear_t.png"
+plot [100000:1200000][0:100] "7-1.txt" u 1:4 title "7x4 spikes linear [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
+
+################################################################################
+set output "7-4-exp linear.png"
+#all
+plot [100000:1200000][0:100] "7-3.txt" u 1:2 title "7x4 exp linear" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-exp linear_r.png"
+plot [100000:1200000][0:100] "7-3.txt" u 1:2 title "7x4 exp linear [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-exp linear_c.png"
+plot [100000:1200000][0:100] "7-3.txt" u 1:3 title "7x4 exp linear [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-exp linear_t.png"
+plot [100000:1200000][0:100] "7-3.txt" u 1:4 title "7x4 exp linear [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
+
+################################################################################
+set output "7-4-exp-spikes.png"
+#all
+plot [100000:1200000][0:100] "7-4.txt" u 1:2 title "7x4 exp spikes" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-exp-spikes_r.png"
+plot [100000:1200000][0:100] "7-4.txt" u 1:2 title "7x4 exp spikes [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-exp-spikes_c.png"
+plot [100000:1200000][0:100] "7-4.txt" u 1:3 title "7x4 exp spikes [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-exp-spikes_t.png"
+plot [100000:1200000][0:100] "7-4.txt" u 1:4 title "7x4 exp spikes [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
+
+################################################################################
+set output "7-4-linear-linear.png"
+#all
+plot [100000:1200000][0:100] "7-5.txt" u 1:2 title "7x4 linear linear" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-linear-linear_r.png"
+plot [100000:1200000][0:100] "7-5.txt" u 1:2 title "7x4 linear linear [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-linear-linear_c.png"
+plot [100000:1200000][0:100] "7-5.txt" u 1:3 title "7x4 linear linear [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-linear-linear_t.png"
+plot [100000:1200000][0:100] "7-5.txt" u 1:4 title "7x4 linear linear [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
+
+################################################################################
+set output "7-4-linear-spikes.png"
+#all
+plot [100000:1200000][0:100] "7-6.txt" u 1:2 title "7x4 linear spikes" w l, "" u 1:3 w lp, "" u 1:4 w l, "" u 1:5 w l, "" u 1:6 w lp, "" u 1:7 w l, "" u 1:8 w l, "" u 1:9 w lp, "" u 1:10 w l, "" u 1:11 w l, "" u 1:12 w lp, "" u 1:13 w l
+
+#just reaches
+set output "7-4-linear-spikes_r.png"
+plot [100000:1200000][0:100] "7-6.txt" u 1:2 title "7x4 linear spikes [reached]" w l, "" u 1:5 w l, "" u 1:8 w l, "" u 1:11 w lp
+
+#just crashes
+set output "7-4-linear-spikes_c.png"
+plot [100000:1200000][0:100] "7-6.txt" u 1:3 title "7x4 linear spikes [crashed]" w l, "" u 1:6 w l, "" u 1:9 w l, "" u 1:12 w lp
+
+#just timeouts
+set output "7-4-linear-spikes_t.png"
+plot [100000:1200000][0:100] "7-6.txt" u 1:4 title "7x4 linear spikes [timeout]" w l, "" u 1:7 w l, "" u 1:10 w l, "" u 1:13 w lp
+################################################################################
